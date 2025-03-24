@@ -5,6 +5,7 @@ import main.java.model.book.enums.BookStatus;
 import main.java.model.person.enums.ReaderLimit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Reader extends Person{
@@ -47,8 +48,42 @@ public class Reader extends Person{
         );
     }
 
+    public void returnBook(Book book) {
+        if (book == null) {
+            throw new IllegalArgumentException("Book cannot be null");
+        }
+
+        if (!books.remove(book)) {
+            throw new IllegalStateException(
+                    String.format("Book '%s' was not borrowed by this reader", book.getTitle())
+            );
+        }
+
+        book.updateStatus(BookStatus.AVAILABLE);
+        System.out.println(String.format("Book '%s' returned successfully", book.getTitle()));
+    }
+
+    public void showBook() {
+        if (books.isEmpty()) {
+            System.out.println("No books currently borrowed by: " + getName());
+            return;
+        }
+
+        System.out.println("Books borrowed by " + getName() + ":");
+        books.forEach(Book::display);
+    }
+
     @Override
     public String whoyouare() {
-        return "";
+        return String.format("Reader: %s (Books borrowed: %d/%d)",
+                getName(), books.size(), readerLimit.getMaxBooks());
+    }
+
+    public List<Book> getBorrowedBooks() {
+        return Collections.unmodifiableList(books);
+    }
+
+    public int getRemainingBookLimit() {
+        return readerLimit.getMaxBooks() - books.size();
     }
 }

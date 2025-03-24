@@ -6,8 +6,9 @@ import main.java.model.book.enums.DefaultBooks;
 import main.java.model.library.Library;
 import main.java.model.person.Reader;
 import main.java.model.person.enums.ReaderLimit;
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     private static final Library library = new Library();
@@ -64,7 +65,7 @@ public class Main {
 
     private static void showAllBooks() {
         System.out.println("\n=== Kütüphanede Bulunan Tüm Kitaplar ===");
-        List<Book> books = library.getBooks();
+        Map<String, Book> books = library.getBooks();
         if (books.isEmpty()) {
             System.out.println("Kütüphanede kitap bulunmamaktadır.");
             return;
@@ -74,7 +75,7 @@ public class Main {
 
     private static void showAvailableBooks() {
         System.out.println("\n=== Mevcut Kitaplar ===");
-        List<Book> availableBooks = library.getAvailableBooks();
+        Set<Book> availableBooks = library.getAvailableBooks();
         if (availableBooks.isEmpty()) {
             System.out.println("Ödünç verilebilecek kitap yok.");
             return;
@@ -131,7 +132,7 @@ public class Main {
     private static void lendBook() {
         System.out.println("\n=== Ödünç Kitap ===");
 
-        List<Book> availableBooks = library.getAvailableBooks();
+        Set<Book> availableBooks = library.getAvailableBooks();
         if (availableBooks.isEmpty()) {
             System.out.println("Ödünç verilebilecek kitap yok.");
             return;
@@ -144,12 +145,18 @@ public class Main {
         System.out.print("\nKitap ID'si girin: ");
         String bookId = scanner.nextLine();
 
-        System.out.print("Okuyucu adını girin: ");
-        String readerName = scanner.nextLine();
+        System.out.println("\nKayıtlı okuyucular:");
+        library.getReaders().values().forEach(reader -> {
+            String readerId = reader.getReaderId().replace("OKUYUCU - ", "");
+            System.out.println(readerId + " - " + reader.getName());
+        });
+
+        System.out.print("\nOkuyucu numarasını girin (örn: 001): ");
+        String readerNumber = scanner.nextLine();
+        String readerId = "OKUYUCU - " + readerNumber;
 
         try {
-            library.lendBook(bookId, readerName);
-            System.out.println("Kitap başarıyla ödünç verildi!");
+            library.lendBook(bookId, readerId);
         } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Hata: " + e.getMessage());
         }
@@ -157,15 +164,27 @@ public class Main {
 
     private static void returnBook() {
         System.out.println("\n=== İade Kitap ===");
-        System.out.print("Kitap ID'si girin: ");
+
+        System.out.println("\nKayıtlı okuyucular ve ödünç aldıkları kitaplar:");
+        library.getReaders().values().forEach(reader -> {
+            String readerId = reader.getReaderId().replace("OKUYUCU - ", "");
+            Set<Book> borrowedBooks = reader.getBorrowedBooks();
+            if (!borrowedBooks.isEmpty()) {
+                System.out.println("\n" + readerId + " - " + reader.getName() + ":");
+                borrowedBooks.forEach(book ->
+                        System.out.println("    " + book.getBookID() + " - " + book.getTitle()));
+            }
+        });
+
+        System.out.print("\nKitap ID'si girin: ");
         String bookId = scanner.nextLine();
 
-        System.out.print("Okuyucu adını girin: ");
-        String readerName = scanner.nextLine();
+        System.out.print("Okuyucu numarasını girin (örn: 001): ");
+        String readerNumber = scanner.nextLine();
+        String readerId = "OKUYUCU - " + readerNumber;
 
         try {
-            library.takeBackBook(bookId, readerName);
-            System.out.println("Kitap başarıyla iade edildi!");
+            library.takeBackBook(bookId, readerId);
         } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Hata: " + e.getMessage());
         }
@@ -173,17 +192,18 @@ public class Main {
 
     private static void showAllReaders() {
         System.out.println("\n=== Tüm Okuyucular ===");
-        List<Reader> readers = library.getReaders();
+        Map<String, Reader> readers = library.getReaders();
 
         if (readers.isEmpty()) {
             System.out.println("Kütüphanede kayıtlı okuyucu yok.");
             return;
         }
 
-        readers.forEach(reader -> {
+        readers.forEach((id, reader) -> {
             System.out.println("\n------------------------");
             System.out.println("Ad: " + reader.getName());
-            List<Book> borrowedBooks = reader.getBorrowedBooks();
+            System.out.println("ID: " + reader.getReaderId());
+            Set<Book> borrowedBooks = reader.getBorrowedBooks();
             if (!borrowedBooks.isEmpty()) {
                 System.out.println("Ödünç alınmış kitaplar:");
                 borrowedBooks.forEach(book ->

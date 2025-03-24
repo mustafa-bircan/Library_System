@@ -3,7 +3,7 @@ package main.java.model.book.enums;
 public enum BookStatus {
         AVAILABLE("Mevcut"),
         BORROWED("Ödünç"),
-        MAINTENANCE("Tadilatta"),
+        MAINTENANCE("Restore"),
         LOST("Kayıp");
 
         private final String displayName;

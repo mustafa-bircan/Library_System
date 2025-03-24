@@ -4,39 +4,38 @@ import main.java.model.book.Book;
 import main.java.model.book.enums.BookStatus;
 import main.java.model.person.Reader;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Library {
-    private final List<Book> books;
-    private final List<Reader> readers;
+    private final Map<String, Book> books;
+    private final Map<String, Reader> readers;
+
 
     public Library() {
-        this.books = new ArrayList<>();
-        this.readers = new ArrayList<>();
+        this.books = new HashMap<>();
+        this.readers = new HashMap<>();
     }
 
     public Book getBook(String bookId) {
         if (bookId == null || bookId.trim().isEmpty()) {
             throw new IllegalArgumentException("Kitap ID boş veya null olamaz");
         }
-        return books
-                .stream()
-                .filter(book -> book.getBookID().equals(bookId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Kitap ID ile bulunamadı: " + bookId));
+        Book book = books.get(bookId);
+        if (book == null) {
+            throw new IllegalArgumentException("Kitap ID ile bulunamadı: " + bookId);
+        }
+        return book;
     }
 
-    public Reader getReader(String readerName) {
-        if (readerName == null || readerName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Okuyucu adı boş veya null olamaz");
+    public Reader getReader(String readerId) {
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID boş veya null olamaz");
         }
-        return readers
-                .stream()
-                .filter(reader -> reader.getName().equals(readerName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Okuyucu bulunamadı: " + readerName));
+        Reader reader = readers.get(readerId);
+        if (reader == null) {
+            throw new IllegalStateException("Okuyucu bulunamadı: " + readerId);
+        }
+        return reader;
     }
 
     public void newBook(Book book) {
@@ -44,31 +43,32 @@ public class Library {
             throw new IllegalArgumentException("Kitap boş olamaz");
         }
 
-        if (books.stream().anyMatch(b -> b.getBookID().equals(book.getBookID()))) {
-            throw new IllegalStateException("Kitap zaten bu ID ile mevcut: " + book.getBookID());
+        String bookId = book.getBookID();
+        if (books.containsKey(bookId)) {
+            throw new IllegalStateException("Kitap zaten bu ID ile mevcut: " + bookId);
         }
 
-        books.add(book);
+        books.put(bookId, book);
     }
 
-    public void lendBook(String bookId, String readerName) {
+    public void lendBook(String bookId, String readerId) {
         Book book = getBook(bookId);
-        Reader reader = getReader(readerName);
+        Reader reader = getReader(readerId);
 
         if (book.getStatus() != BookStatus.AVAILABLE) {
             throw new IllegalStateException("Kitap ödünç verilemez: " + book.getTitle());
         }
 
         reader.borrowBook(book);
-        System.out.println("Kitap başarıyla ödünç verildi " + reader.getName());
+        System.out.println("Kitap başarıyla " + reader.getName().toUpperCase() + " adlı okuyucumuza ödünç verildi :)");
     }
 
-    public void takeBackBook(String bookId, String readerName) {
+    public void takeBackBook(String bookId, String readerId) {
         Book book = getBook(bookId);
-        Reader reader = getReader(readerName);
+        Reader reader = getReader(readerId);
 
         reader.returnBook(book);
-        System.out.println("Kitap başarıyla iade edildi: " + reader.getName());
+        System.out.println("Kitap başarıyla " + reader.getName().toUpperCase() + " adlı okuyucumuzdan iade alındı :)");
     }
 
     public void showBook() {
@@ -78,7 +78,7 @@ public class Library {
         }
 
         System.out.println("Kütüphane Kitap Envanteri:");
-        books.forEach(book -> {
+        books.values().forEach(book -> {
             System.out.println("------------------------");
             book.display();
         });
@@ -89,28 +89,28 @@ public class Library {
             throw new IllegalArgumentException("Okuyucu boş olamaz");
         }
 
-        if (readers.stream().anyMatch(r -> r.getName().equals(reader.getName()))) {
-            throw new IllegalStateException("Okuyucu zaten mevcut: " + reader.getName());
+        String readerId = reader.getReaderId();
+        if (readers.containsKey(readerId)) {
+            throw new IllegalStateException("Okuyucu zaten mevcut ID ile kayıtlı: " + readerId);
         }
 
-        readers.add(reader);
-        System.out.println("Yeni okuyucu eklendi: " + reader.getName());
+        readers.put(readerId, reader);
+        System.out.println("Yeni okuyucu eklendi: " + reader.getName() + " (ID: " + readerId + ")");
     }
 
-    public List<Book> getAvailableBooks() {
-        return books.stream()
+    public Set<Book> getAvailableBooks() {
+        return books.values().stream()
                 .filter(book -> book.getStatus() == BookStatus.AVAILABLE)
-                .toList();
+                .collect(HashSet::new, HashSet::add, HashSet::addAll);
     }
 
-    public List<Book> getBooks() {
-        return Collections.unmodifiableList(books);
+    public Map<String, Book> getBooks() {
+        return Collections.unmodifiableMap(books);
     }
 
-    public List<Reader> getReaders() {
-        return Collections.unmodifiableList(readers);
+    public Map<String, Reader> getReaders() {
+        return Collections.unmodifiableMap(readers);
     }
-
     @Override
     public String toString() {
         return String.format("Kütüphane{books=%d, okuyucular=%d}", books.size(), readers.size());

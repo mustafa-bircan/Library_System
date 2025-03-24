@@ -5,7 +5,6 @@ import main.java.model.book.Book;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Author extends Person{
     private final List<Book> books;
@@ -17,24 +16,24 @@ public class Author extends Person{
 
     public void newBook(Book book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new IllegalArgumentException("Kitap boş olamaz");
         }
         books.add(book);
     }
 
     public void showBook() {
         if (books.isEmpty()) {
-            System.out.println("No books available for author: " + getName());
+            System.out.println("Yazar için kitap mevcut değil: " + getName());
             return;
         }
 
-        System.out.println("Books by author " + getName() + ":");
+        System.out.println("Yazara göre kitaplar " + getName() + ":");
         books.forEach(Book::display);
     }
 
     @Override
     public String whoyouare() {
-        return "Author: " + getName();
+        return "Yazar: " + getName();
     }
 
     public List<Book> getBooks() {
@@ -46,9 +45,9 @@ public class Author extends Person{
     }
     @Override
     public String toString() {
-        return "Author{" +
-                "name='" + getName() + '\'' +
-                ", numberOfBooks=" + books.size() +
+        return "Yazar{" +
+                "ad='" + getName() + '\'' +
+                ", kitapSayisi=" + books.size() +
                 '}';
     }
 

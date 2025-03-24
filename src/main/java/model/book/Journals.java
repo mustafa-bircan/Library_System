@@ -37,18 +37,18 @@ public class Journals extends Book {
         public void display() {
                 super.display();
                 System.out.println(String.format("""
-            Journal Details:
-            Subject: %s
+            Dergi Detayları:
+            Konu: %s
             ISSN: %s
-            Volume: %d
-            Issue: %d
+            Cilt: %d
+            Sayı: %d
             """,
                         journalSubject, issn, volume, issue));
         }
 
         @Override
         public String toString() {
-                return String.format("Journal{id='%s', name='%s', subject='%s', volume=%d, issue=%d}",
+                return String.format("Dergi{id='%s', ad='%s', konu='%s', cilt=%d, sayı=%d}",
                         getBookID(), getTitle(), journalSubject, volume, issue);
         }
 

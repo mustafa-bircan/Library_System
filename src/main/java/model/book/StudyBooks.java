@@ -39,11 +39,11 @@ public class StudyBooks extends Book {
     public void display() {
         super.display();
         System.out.println(String.format("""
-            Study Book Details:
-            Subject: %s
+            Ders Kitabı Detayları:
+            Konu: %s
             ISBN: %s
-            Grade: %d
-            Publisher: %s
+            Sınıf: %d
+            Yayıncı: %s
             """,
                 subject, isbn, grade, publisher));
     }
@@ -52,17 +52,18 @@ public class StudyBooks extends Book {
     public String getDisplayInfo() {
         return super.getDisplayInfo() + String.format("""
             
-            Study Book Details:
-            Subject: %s
+            Ders Kitabı Detayları:
+            Konu: %s
             ISBN: %s
-            Grade: %d
-            Publisher: %s""",
+            Sınıf: %d
+            Yayıncı: %s
+            """,
                 subject, isbn, grade, publisher);
     }
 
     @Override
     public String toString() {
-        return String.format("StudyBook{id='%s', name='%s', subject='%s', grade=%d, publisher='%s'}",
+        return String.format("DersKitabı{id='%s', ad='%s', konu='%s', sınıf=%d, yayıncı='%s'}",
                 getBookID(), getTitle(), subject, grade, publisher);
     }
 

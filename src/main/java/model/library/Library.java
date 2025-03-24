@@ -19,37 +19,36 @@ public class Library {
 
     public Book getBook(String bookId) {
         if (bookId == null || bookId.trim().isEmpty()) {
-            throw new IllegalArgumentException("Book ID cannot be null or empty");
+            throw new IllegalArgumentException("Kitap ID boş veya null olamaz");
         }
         return books
                 .stream()
                 .filter(book -> book.getBookID().equals(bookId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Book not found with ID: " + bookId));
+                .orElseThrow(() -> new IllegalArgumentException("Kitap ID ile bulunamadı: " + bookId));
     }
 
     public Reader getReader(String readerName) {
         if (readerName == null || readerName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Reader nsame cannot be null or empty");
+            throw new IllegalArgumentException("Okuyucu adı boş veya null olamaz");
         }
         return readers
                 .stream()
                 .filter(reader -> reader.getName().equals(readerName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Reader not found: " + readerName));
+                .orElseThrow(() -> new IllegalStateException("Okuyucu bulunamadı: " + readerName));
     }
 
     public void newBook(Book book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new IllegalArgumentException("Kitap boş olamaz");
         }
 
         if (books.stream().anyMatch(b -> b.getBookID().equals(book.getBookID()))) {
-            throw new IllegalStateException("Book already exists with ID: " + book.getBookID());
+            throw new IllegalStateException("Kitap zaten bu ID ile mevcut: " + book.getBookID());
         }
 
         books.add(book);
-        System.out.println("New book added: " + book.getTitle());
     }
 
     public void lendBook(String bookId, String readerName) {
@@ -57,11 +56,11 @@ public class Library {
         Reader reader = getReader(readerName);
 
         if (book.getStatus() != BookStatus.AVAILABLE) {
-            throw new IllegalStateException("Book is not available for lending: " + book.getTitle());
+            throw new IllegalStateException("Kitap ödünç verilemez: " + book.getTitle());
         }
 
         reader.borrowBook(book);
-        System.out.println("Book lent successfully to " + reader.getName());
+        System.out.println("Kitap başarıyla ödünç verildi " + reader.getName());
     }
 
     public void takeBackBook(String bookId, String readerName) {
@@ -69,16 +68,16 @@ public class Library {
         Reader reader = getReader(readerName);
 
         reader.returnBook(book);
-        System.out.println("Book returned successfully by " + reader.getName());
+        System.out.println("Kitap başarıyla iade edildi: " + reader.getName());
     }
 
     public void showBook() {
         if (books.isEmpty()) {
-            System.out.println("No books in the library");
+            System.out.println("Kütüphanede kitap yok!");
             return;
         }
 
-        System.out.println("Library Book Inventory:");
+        System.out.println("Kütüphane Kitap Envanteri:");
         books.forEach(book -> {
             System.out.println("------------------------");
             book.display();
@@ -87,15 +86,15 @@ public class Library {
 
     public void addReader(Reader reader) {
         if (reader == null) {
-            throw new IllegalArgumentException("Reader cannot be null");
+            throw new IllegalArgumentException("Okuyucu boş olamaz");
         }
 
         if (readers.stream().anyMatch(r -> r.getName().equals(reader.getName()))) {
-            throw new IllegalStateException("Reader already exists: " + reader.getName());
+            throw new IllegalStateException("Okuyucu zaten mevcut: " + reader.getName());
         }
 
         readers.add(reader);
-        System.out.println("New reader added: " + reader.getName());
+        System.out.println("Yeni okuyucu eklendi: " + reader.getName());
     }
 
     public List<Book> getAvailableBooks() {
@@ -114,6 +113,6 @@ public class Library {
 
     @Override
     public String toString() {
-        return String.format("Library{books=%d, readers=%d}", books.size(), readers.size());
+        return String.format("Kütüphane{books=%d, okuyucular=%d}", books.size(), readers.size());
     }
 }

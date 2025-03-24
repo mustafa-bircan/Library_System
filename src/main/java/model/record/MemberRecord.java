@@ -34,7 +34,7 @@ public class MemberRecord {
     public void incBookIssued() {
         if (noBooksIssued >= maxBookLimit) {
             throw new IllegalArgumentException(
-                    String.format("Cannot issue more books. Limit reached: %d/%d",
+                    String.format("Daha fazla kitap yayınlanamaz. Sınıra ulaşıldı: %d/%d",
                             noBooksIssued,maxBookLimit)
             );
         }
@@ -42,23 +42,23 @@ public class MemberRecord {
 
     public void decBookIssued() {
         if (noBooksIssued <= 0) {
-            throw new IllegalStateException("No books currently issued");
+            throw new IllegalStateException("Şu anda basılmış kitap yok");
         }
         noBooksIssued--;
     }
 
     public void payBill(double amount) {
         if (amount < 0) {
-            throw new IllegalArgumentException("Payment amount cannot be negative");
+            throw new IllegalArgumentException("Ödeme tutarı negatif olamaz");
         }
         System.out.println(String.format("""
             =====================
-            PAYMENT RECEIPT
+            ÖDEME FATURASI
             =====================
-            Member: %s
-            Member ID: %s
-            Amount Paid: $%.2f
-            Date: %s
+            Üye: %s
+            Üye ID: %s
+            Ödenen Tutar: ₺%.2f
+            Tarih: %s
             =====================
             """,
                 name, memberId, amount, LocalDate.now()));
@@ -77,7 +77,7 @@ public class MemberRecord {
 
     @Override
     public String toString() {
-        return String.format("MemberRecord{id='%s', name='%s', type=%s, booksIssued=%d/%d}",
+        return String.format("ÜyeKaydı{id='%s', ad='%s', tipi=%s, kitaplarYayınlandı=%d/%d}",
                 memberId, name, type, noBooksIssued, maxBookLimit);
     }
 }

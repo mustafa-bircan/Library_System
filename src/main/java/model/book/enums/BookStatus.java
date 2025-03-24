@@ -1,10 +1,10 @@
 package main.java.model.book.enums;
 
 public enum BookStatus {
-        AVAILABLE("Available"),
-        BORROWED("Borrowed"),
-        MAINTENANCE("Under Maintenance"),
-        LOST("Lost");
+        AVAILABLE("Mevcut"),
+        BORROWED("Ödünç"),
+        MAINTENANCE("Tadilatta"),
+        LOST("Kayıp");
 
         private final String displayName;
 

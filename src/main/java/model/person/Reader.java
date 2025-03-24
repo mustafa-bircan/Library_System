@@ -20,12 +20,12 @@ public class Reader extends Person{
 
     public void borrowBook(Book book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new IllegalArgumentException("Kitap boş olamaz");
         }
 
         if (books.size() >= readerLimit.getMaxBooks()) {
             throw new IllegalStateException(
-                    String.format("Cannot borrow more than %d books with %s limit",
+                    String.format("%s limitiyle %d'den fazla kitap ödünç alınamaz",
                             readerLimit.getMaxBooks(),
                             readerLimit.name())
             );
@@ -33,7 +33,7 @@ public class Reader extends Person{
 
         if (book.getStatus() != BookStatus.AVAILABLE) {
             throw new IllegalStateException(
-                    String.format("Book '%s' is not available for borrowing. Current status: %s",
+                    String.format("'%s' kitabı ödünç alınamıyor. Mevcut durum: %s",
                             book.getTitle(),
                             book.getStatus().name())
             );
@@ -42,7 +42,7 @@ public class Reader extends Person{
         books.add(book);
         book.updateStatus(BookStatus.BORROWED);
         System.out.println(
-                String.format("Book '%s' borrowed successfully. Remaining limit: %d books",
+                String.format("'%s' kitabı başarıyla ödünç alındı. Kalan sınır: %d kitap",
                         book.getTitle(),
                         readerLimit.getMaxBooks() - books.size())
         );
@@ -50,32 +50,32 @@ public class Reader extends Person{
 
     public void returnBook(Book book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new IllegalArgumentException("Kitap boş olamaz");
         }
 
         if (!books.remove(book)) {
             throw new IllegalStateException(
-                    String.format("Book '%s' was not borrowed by this reader", book.getTitle())
+                    String.format("'%s' kitabı bu okuyucu tarafından ödünç alınamadı", book.getTitle())
             );
         }
 
         book.updateStatus(BookStatus.AVAILABLE);
-        System.out.println(String.format("Book '%s' returned successfully", book.getTitle()));
+        System.out.println(String.format("'%s' kitabı başarıyla iade alındı", book.getTitle()));
     }
 
     public void showBook() {
         if (books.isEmpty()) {
-            System.out.println("No books currently borrowed by: " + getName());
+            System.out.println("Şu anda ödünç alınmış kitap yok: " + getName());
             return;
         }
 
-        System.out.println("Books borrowed by " + getName() + ":");
+        System.out.println("Ödünç alınan kitaplar " + getName() + ":");
         books.forEach(Book::display);
     }
 
     @Override
     public String whoyouare() {
-        return String.format("Reader: %s (Books borrowed: %d/%d)",
+        return String.format("Okuyucu: %s (Ödünç alınan kitaplar: %d/%d)",
                 getName(), books.size(), readerLimit.getMaxBooks());
     }
 

@@ -16,7 +16,7 @@ public class JournalBuilder extends BookBuilder {
 
     public JournalBuilder journalSubject(String subject) {
         if (subject == null || subject.trim().isEmpty()) {
-            throw new IllegalArgumentException("Journal subject cannot be null or empty");
+            throw new IllegalArgumentException("Dergi konusu boş veya null olamaz");
         }
         this.journalSubject = subject;
         return this;
@@ -24,7 +24,7 @@ public class JournalBuilder extends BookBuilder {
 
     public JournalBuilder issn(String issn) {
         if (issn == null || !issn.matches("\\d{4}-\\d{3}[\\dX]")) {
-            throw new IllegalArgumentException("Invalid ISSN format. Must be XXXX-XXXX");
+            throw new IllegalArgumentException("Geçersiz ISSN biçimi. XXXX-XXXX olmalıdır");
         }
         this.issn = issn;
         return this;
@@ -32,7 +32,7 @@ public class JournalBuilder extends BookBuilder {
 
     public JournalBuilder volume(int volume) {
         if (volume <= 0) {
-            throw new IllegalArgumentException("Volume must be positive");
+            throw new IllegalArgumentException("Cilt sayısı pozitif olmalıdır");
         }
         this.volume = volume;
         return this;
@@ -40,7 +40,7 @@ public class JournalBuilder extends BookBuilder {
 
     public JournalBuilder issue(int issue) {
         if (issue <= 0) {
-            throw new IllegalArgumentException("Issue must be positive");
+            throw new IllegalArgumentException("Sayı pozitif olmalıdır");
         }
         this.issue = issue;
         return this;
@@ -55,14 +55,14 @@ public class JournalBuilder extends BookBuilder {
     private void validateJournalFields() {
         List<String> missingFields = new ArrayList<>();
 
-        if (journalSubject == null) missingFields.add("journal subject");
+        if (journalSubject == null) missingFields.add("dergi konusu");
         if (issn == null) missingFields.add("ISSN");
-        if (volume <= 0) missingFields.add("volume");
-        if (issue <= 0) missingFields.add("issue");
+        if (volume <= 0) missingFields.add("cilt");
+        if (issue <= 0) missingFields.add("sayı");
 
         if (!missingFields.isEmpty()) {
             throw new IllegalStateException(
-                    "Cannot build Journal. Missing required fields: " +
+                    "Dergi oluşturulamıyor. Gerekli alanlar eksik: " +
                             String.join(", ", missingFields)
             );
         }

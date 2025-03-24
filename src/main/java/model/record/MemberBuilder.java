@@ -14,10 +14,10 @@ public class MemberBuilder {
 
     public MemberBuilder(String memberId,String name) {
         if (memberId == null || memberId.trim().isEmpty()) {
-            throw new IllegalArgumentException("Member ID cannot be null or empty");
+            throw new IllegalArgumentException("Üye kimliği boş veya null olamaz");
         }
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
+            throw new IllegalArgumentException("Ad boş veya null olamaz");
         }
         this.memberId = memberId;
         this.name = name;
@@ -25,10 +25,10 @@ public class MemberBuilder {
 
     public MemberBuilder address(String address) {
         if (address == null || address.trim().isEmpty()) {
-            throw new IllegalArgumentException("Address cannot be null or empty");
+            throw new IllegalArgumentException("Adres boş veya null olamaz");
         }
         if (address.length() < 5) {
-            throw new IllegalArgumentException("Address must be at least 5 characters");
+            throw new IllegalArgumentException("Adres en az 5 karakter olmalıdır");
         }
         this.address = address;
         return this;
@@ -36,10 +36,10 @@ public class MemberBuilder {
 
     public MemberBuilder phoneNo(String phoneNo) {
         if (phoneNo == null || phoneNo.trim().isEmpty()) {
-            throw new IllegalArgumentException("Phone number cannot be null or empty");
+            throw new IllegalArgumentException("Telefon numarası boş veya null olamaz");
         }
         if (!phoneNo.matches("\\d{3}-\\d{4}")) {
-            throw new IllegalArgumentException("Phone number must be in format: XXX-XXXX");
+            throw new IllegalArgumentException("Telefon numarası formatta olmalıdır: XXX-XXXX");
         }
         this.phoneNo = phoneNo;
         return this;
@@ -47,7 +47,7 @@ public class MemberBuilder {
 
     public MemberBuilder type(ReaderLimit type) {
         if (type == null) {
-            throw new IllegalArgumentException("Member type cannot be null");
+            throw new IllegalArgumentException("Üye tipi null olamaz");
         }
         this.type = type;
         return this;
@@ -60,13 +60,13 @@ public class MemberBuilder {
 
     private void validateAllFields() {
         List<String> missingFields = new ArrayList<>();
-        if (address == null) missingFields.add("address");
-        if (phoneNo == null) missingFields.add("phone number");
-        if (type == null) missingFields.add("member type");
+        if (address == null) missingFields.add("adres");
+        if (phoneNo == null) missingFields.add("telefon numarası");
+        if (type == null) missingFields.add("üye tipi");
 
         if (!missingFields.isEmpty()) {
             throw new IllegalStateException(
-                    "Cannot build MemberRecord. Missing required fields: " +
+                    "MemberRecord oluşturulamıyor. Eksik gerekli alanlar: " +
                             String.join(", ", missingFields)
             );
         }

@@ -42,14 +42,14 @@ public class Book implements IReadable, IBorrowable {
 
     public void changeOwner(String newOwner) {
         if (newOwner == null || newOwner.trim().isEmpty()) {
-            throw new IllegalArgumentException("New owner cannot be null or empty");
+                throw new IllegalArgumentException("Yeni kitap sahibi boş veya null olamaz");
         }
         this.status = BookStatus.BORROWED;
     }
 
     public void updateStatus(BookStatus newStatus) {
         if (newStatus == null) {
-            throw new IllegalArgumentException("Status cannot be null");
+            throw new IllegalArgumentException("Durum null olamaz");
         }
         this.status = newStatus;
     }
@@ -72,13 +72,13 @@ public class Book implements IReadable, IBorrowable {
 
     public String getDisplayInfo() {
         return new StringBuilder()
-                .append("Book ID: ").append(bookID).append("\n")
-                .append("Title: ").append(name).append("\n")
-                .append("Author: ").append(author).append("\n")
-                .append("Price: $").append(String.format("%.2f", price)).append("\n")
-                .append("Edition: ").append(edition).append("\n")
-                .append("Status: ").append(status.getDisplayName()).append("\n")
-                .append("Purchase Date: ").append(dateOfPurchase)
+                .append("Kitap ID: ").append(bookID).append("\n")
+                .append("Başlk: ").append(name).append("\n")
+                .append("Yazar: ").append(author).append("\n")
+                .append("Fiyat: ₺").append(String.format("%.2f", price)).append("\n")
+                .append("Baskı: ").append(edition).append("\n")
+                .append("Durum: ").append(status.getDisplayName()).append("\n")
+                .append("Satın Alma Tarihi: ").append(dateOfPurchase)
                 .toString();
     }
 

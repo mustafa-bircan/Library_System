@@ -17,7 +17,7 @@ public class StudyBookBuilder extends BookBuilder{
 
     public StudyBookBuilder subject(String subject) {
         if (subject == null || subject.trim().isEmpty()) {
-            throw new IllegalArgumentException("Subject cannot be null or empty");
+            throw new IllegalArgumentException("Konu boş veya null olamaz");
         }
         this.subject = subject;
         return this;
@@ -25,7 +25,7 @@ public class StudyBookBuilder extends BookBuilder{
 
     public StudyBookBuilder isbn(String isbn) {
         if (isbn == null || !isbn.matches("\\d{3}-\\d{10}")) {
-            throw new IllegalArgumentException("Invalid ISBN format. Must be XXX-XXXXXXXXXX");
+            throw new IllegalArgumentException("Geçersiz ISBN biçimi. XXX-XXXXXXXXXX olmalıdır");
         }
         this.isbn = isbn;
         return this;
@@ -33,7 +33,7 @@ public class StudyBookBuilder extends BookBuilder{
 
     public StudyBookBuilder grade(int grade) {
         if (grade < 1 || grade > 12) {
-            throw new IllegalArgumentException("Grade must be between 1 and 12");
+            throw new IllegalArgumentException("Sınıf 1 ile 12 arasında olmalıdır");
         }
         this.grade = grade;
         return this;
@@ -41,7 +41,7 @@ public class StudyBookBuilder extends BookBuilder{
 
     public StudyBookBuilder publisher(String publisher) {
         if (publisher == null || publisher.trim().isEmpty()) {
-            throw new IllegalArgumentException("Publisher cannot be null or empty");
+            throw new IllegalArgumentException("Yayıncı boş veya null olamaz");
         }
         this.publisher = publisher;
         return this;
@@ -56,14 +56,14 @@ public class StudyBookBuilder extends BookBuilder{
     private void validateStudyBookFields() {
         List<String> missingFields = new ArrayList<>();
 
-        if (subject == null) missingFields.add("subject");
+        if (subject == null) missingFields.add("konu");
         if (isbn == null) missingFields.add("ISBN");
-        if (grade < 1 || grade > 12) missingFields.add("grade");
-        if (publisher == null) missingFields.add("publisher");
+        if (grade < 1 || grade > 12) missingFields.add("sınıf");
+        if (publisher == null) missingFields.add("yayıncı");
 
         if (!missingFields.isEmpty()) {
             throw new IllegalStateException(
-                    "Cannot build StudyBook. Missing required fields: " +
+                    "Çalışma Kitabı oluşturulamıyor. Gerekli alanlar eksik: " +
                             String.join(", ", missingFields)
             );
         }

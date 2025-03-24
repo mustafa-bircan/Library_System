@@ -5,7 +5,7 @@ public abstract class Person {
 
     public Person(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
+            throw new IllegalArgumentException("Ad boş veya null olamaz");
         }
         this.name = name;
     }
@@ -16,7 +16,7 @@ public abstract class Person {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
+            throw new IllegalArgumentException("Ad boş veya null olamaz");
         }
         this.name = name;
     }
@@ -25,6 +25,6 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return "Person{name='" + name + "'}";
+        return "Kişi{ad='" + name + "'}";
     }
 }

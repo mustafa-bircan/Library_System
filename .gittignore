@@ -1,0 +1,35 @@
+# IntelliJ IDEA specific
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+target/
+
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/

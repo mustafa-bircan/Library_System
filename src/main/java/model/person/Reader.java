@@ -4,18 +4,19 @@ import main.java.model.book.Book;
 import main.java.model.book.enums.BookStatus;
 import main.java.model.person.enums.ReaderLimit;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Reader extends Person{
     private final ReaderLimit readerLimit;
-    private final List<Book> books;
+    private final Set<Book> books;
+    private final String readerId;
+    private static int nextId = 1;
 
     public Reader(String name, ReaderLimit readerLimit) {
         super(name);
         this.readerLimit = readerLimit;
-        this.books = new ArrayList<>();
+        this.books = new HashSet<>();
+        this.readerId = "OKUYUCU - " + String.format("%03d", nextId++);
     }
 
     public void borrowBook(Book book) {
@@ -75,12 +76,20 @@ public class Reader extends Person{
 
     @Override
     public String whoyouare() {
-        return String.format("Okuyucu: %s (Ödünç alınan kitaplar: %d/%d)",
+        return String.format("Okuyucu: %s (ID: %s) (Ödünç alınan kitaplar: %d/%d)",
                 getName(), books.size(), readerLimit.getMaxBooks());
     }
 
-    public List<Book> getBorrowedBooks() {
-        return Collections.unmodifiableList(books);
+    public Set<Book> getBorrowedBooks() {
+        return Collections.unmodifiableSet(books);
+    }
+
+    public String getReaderId() {
+        return readerId;
+    }
+
+    public ReaderLimit getReaderLimit() {
+        return readerLimit;
     }
 
     public int getRemainingBookLimit() {

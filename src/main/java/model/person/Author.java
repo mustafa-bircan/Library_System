@@ -22,8 +22,14 @@ public class Author extends Person{
         books.add(book);
     }
 
-    public List<Book> showBooks() {
-        return Collections.unmodifiableList(books);
+    public void showBook() {
+        if (books.isEmpty()) {
+            System.out.println("No books available for author: " + getName());
+            return;
+        }
+
+        System.out.println("Books by author " + getName() + ":");
+        books.forEach(Book::display);
     }
 
     @Override
@@ -31,10 +37,13 @@ public class Author extends Person{
         return "Author: " + getName();
     }
 
+    public List<Book> getBooks() {
+        return Collections.unmodifiableList(books);  
+    }
+
     public int getBookCount() {
         return books.size();
     }
-
     @Override
     public String toString() {
         return "Author{" +

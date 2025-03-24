@@ -2,10 +2,13 @@ package main.java.model.book;
 
 import main.java.model.book.builder.BookBuilder;
 import main.java.model.book.enums.BookStatus;
+import main.java.model.book.interfaces.IBorrowable;
+import main.java.model.book.interfaces.IReadable;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Book {
+public class Book implements IReadable, IBorrowable {
     private final String bookID;
     private String author;
     private String name;

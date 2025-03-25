@@ -92,4 +92,33 @@ public class LibraryView {
         });
         System.out.println("------------------------");
     }
+
+    public void handleNewBook() {
+        System.out.println("\n=== Yeni Kitap Ekle ===");
+
+        System.out.println("Kitap adı girin: ");
+        String title = scanner.nextLine();
+
+        System.out.println("Yazar adı girin: ");
+        String author = scanner.nextLine();
+
+        System.out.println("Fiyat girin: ");
+        double price = 0.0;
+        try {
+            price = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz fiyat formatı (Örn: 25.50)");
+        }
+
+        System.out.println("Baskı bilgisi girin: ");
+        String edition = scanner.nextLine();
+
+        try {
+            controller.addNewBook(title,author,price,edition);
+            System.out.println("\nKitap başarıyla eklendi");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+
+    }
 }

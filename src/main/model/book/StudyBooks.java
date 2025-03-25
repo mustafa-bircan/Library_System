@@ -1,9 +1,6 @@
-package main.java.model.book;
+package main.model.book;
 
-import main.java.model.book.builder.StudyBookBuilder;
-import main.java.model.book.enums.BookStatus;
-import main.java.model.book.interfaces.IReadable;
-import main.java.model.book.interfaces.IBorrowable;
+import main.model.book.builder.StudyBookBuilder;
 
 public class StudyBooks extends Book {
     private final String subject;

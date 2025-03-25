@@ -1,6 +1,6 @@
-package main.java.model.person;
+package main.model.person;
 
-import main.java.model.book.Book;
+import main.model.book.Book;
 
 import java.util.ArrayList;
 import java.util.Collections;

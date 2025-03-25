@@ -1,7 +1,7 @@
 package main.view;
 
 import main.controller.LibraryController;
-import main.java.model.book.Book;
+import main.model.book.Book;
 
 import java.util.Map;
 import java.util.Scanner;

@@ -1,9 +1,9 @@
 package main.controller;
 
-import main.java.model.book.Book;
-import main.java.model.book.builder.BookBuilder;
-import main.java.model.book.enums.BookStatus;
-import main.java.model.library.Library;
+import main.model.book.Book;
+import main.model.book.builder.BookBuilder;
+import main.model.book.enums.BookStatus;
+import main.model.library.Library;
 
 import java.util.Map;
 import java.util.Set;

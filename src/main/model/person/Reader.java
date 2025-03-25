@@ -1,8 +1,8 @@
-package main.java.model.person;
+package main.model.person;
 
-import main.java.model.book.Book;
-import main.java.model.book.enums.BookStatus;
-import main.java.model.person.enums.ReaderLimit;
+import main.model.book.Book;
+import main.model.book.enums.BookStatus;
+import main.model.person.enums.ReaderLimit;
 
 import java.util.*;
 

@@ -1,9 +1,9 @@
-package main.java.model.library;
+package main.model.library;
 
-import main.java.model.book.Book;
-import main.java.model.book.builder.BookBuilder;
-import main.java.model.book.enums.BookStatus;
-import main.java.model.person.Reader;
+import main.model.book.Book;
+import main.model.book.builder.BookBuilder;
+import main.model.book.enums.BookStatus;
+import main.model.person.Reader;
 
 import java.util.*;
 

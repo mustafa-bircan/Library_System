@@ -1,7 +1,7 @@
-package main.java.model.record;
+package main.model.record;
 
-import main.java.model.book.Book;
-import main.java.model.person.enums.ReaderLimit;
+import main.model.book.Book;
+import main.model.person.enums.ReaderLimit;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;

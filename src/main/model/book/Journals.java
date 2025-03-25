@@ -1,7 +1,6 @@
-package main.java.model.book;
+package main.model.book;
 
-import main.java.model.book.builder.JournalBuilder;
-import main.java.model.book.enums.BookStatus;
+import main.model.book.builder.JournalBuilder;
 
 public class Journals extends Book {
         private final String journalSubject;

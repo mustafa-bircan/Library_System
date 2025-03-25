@@ -1,6 +1,6 @@
-package main.java.model.book.builder;
+package main.model.book.builder;
 
-import main.java.model.book.StudyBooks;
+import main.model.book.StudyBooks;
 
 import java.util.ArrayList;
 import java.util.List;

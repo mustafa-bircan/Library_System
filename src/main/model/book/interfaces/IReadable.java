@@ -1,4 +1,4 @@
-package main.java.model.book.interfaces;
+package main.model.book.interfaces;
 
 public interface IReadable {
     String getTitle();

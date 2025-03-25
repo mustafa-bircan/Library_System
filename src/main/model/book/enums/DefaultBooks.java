@@ -1,9 +1,9 @@
-package main.java.model.book.enums;
+package main.model.book.enums;
 
-import main.java.model.book.Book;
-import main.java.model.book.builder.BookBuilder;
-import main.java.model.book.builder.JournalBuilder;
-import main.java.model.book.builder.StudyBookBuilder;
+import main.model.book.Book;
+import main.model.book.builder.BookBuilder;
+import main.model.book.builder.JournalBuilder;
+import main.model.book.builder.StudyBookBuilder;
 
 import java.time.LocalDate;
 

@@ -1,9 +1,9 @@
-package main.java.model.book;
+package main.model.book;
 
-import main.java.model.book.builder.BookBuilder;
-import main.java.model.book.enums.BookStatus;
-import main.java.model.book.interfaces.IBorrowable;
-import main.java.model.book.interfaces.IReadable;
+import main.model.book.builder.BookBuilder;
+import main.model.book.enums.BookStatus;
+import main.model.book.interfaces.IBorrowable;
+import main.model.book.interfaces.IReadable;
 
 import java.time.LocalDate;
 import java.util.UUID;

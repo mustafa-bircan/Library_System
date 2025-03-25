@@ -1,4 +1,4 @@
-package main.java.model.person.enums;
+package main.model.person.enums;
 
 public enum ReaderLimit {
     STANDART(5,14,0.50),

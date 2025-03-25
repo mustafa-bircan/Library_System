@@ -1,6 +1,6 @@
-package main.java.model.record;
+package main.model.record;
 
-import main.java.model.person.enums.ReaderLimit;
+import main.model.person.enums.ReaderLimit;
 
 import java.util.ArrayList;
 import java.util.List;

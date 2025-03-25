@@ -1,6 +1,6 @@
-package main.java.model.book.interfaces;
+package main.model.book.interfaces;
 
-import main.java.model.book.enums.BookStatus;
+import main.model.book.enums.BookStatus;
 
 public interface IBorrowable {
     String getOwner();

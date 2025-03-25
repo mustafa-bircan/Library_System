@@ -1,4 +1,4 @@
-package main.java.model.book.enums;
+package main.model.book.enums;
 
 public enum BookStatus {
         AVAILABLE("Mevcut"),

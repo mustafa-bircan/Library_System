@@ -63,6 +63,7 @@ public class LibraryView {
         System.out.println("27. Öğrenci Sil");
         System.out.println("28. Akademisyen Sil");
         System.out.println("29. Bölüme Göre Öğrencileri Listele");
+        System.out.println("30. Kitap Arama");
 
         System.out.println("\n0. ÇIKIŞ");
         System.out.print("\nSeçim İçin Tuşlama Yapın: ");
@@ -933,5 +934,41 @@ public class LibraryView {
         } catch (Exception e) {
             System.out.println("Hata: " + e.getMessage());
         }
+    }
+
+    public void handleSearchBook() {
+        System.out.println("\n=== Kitap Arama ===");
+        System.out.println("1. Yazar ile Ara");
+        System.out.println("2. Kitap Adı ile Ara");
+        System.out.print("Seçiminiz: ");
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            System.out.print("Arama terimi: ");
+            String searchTerm = scanner.nextLine().toLowerCase().trim();
+
+            List<Book> results = controller.searchBooks(choice, searchTerm);
+            displaySearchResults(results);
+        } catch (Exception e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    private void displaySearchResults(List<Book> results) {
+        if (results.isEmpty()) {
+            System.out.println("\nArama sonucu bulunamadı!");
+            return;
+        }
+
+        System.out.println("\n=== Arama Sonuçları ===");
+        results.forEach(book -> {
+            System.out.println("\n------------------------");
+            System.out.println("Kitap ID: " + book.getBookID());
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Durum: " + book.getStatus().getDisplayName());
+            System.out.println("Baskı: " + book.getEdition());
+            System.out.println("Fiyat: ₺" + String.format("%.2f", book.getPrice()));
+        });
     }
 }

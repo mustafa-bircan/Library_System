@@ -36,9 +36,9 @@ public class Book implements IReadable, IBorrowable {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    /*public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
-    }
+    }*/
 
     public String getTitle() {
         return name;

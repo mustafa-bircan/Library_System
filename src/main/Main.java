@@ -59,6 +59,7 @@ public class Main {
                 case 27 -> view.handleDeleteStudent();
                 case 28 -> view.handleDeleteFaculty();
                 case 29 -> view.handleListStudentsByDepartment();
+                case 30 -> view.handleSearchBook();
                 default -> System.out.println("Geçersiz seçim! Lütfen tekrar deneyin.");
             }
         }

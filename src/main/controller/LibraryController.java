@@ -425,4 +425,20 @@ public class LibraryController {
         int nextId = getAllStudents().size() + 1;
         return "STD-" + String.format("%03d", nextId);
     }
+
+    public List<Book> searchBooks(int searchType, String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            throw new IllegalArgumentException("Arama terimi boş olamaz!");
+        }
+
+        return library.getBooks().values().stream()
+                .filter(book -> {
+                    return switch (searchType) {
+                        case 1 -> book.getAuthor().toLowerCase().contains(searchTerm);
+                        case 2 -> book.getTitle().toLowerCase().contains(searchTerm);
+                        default -> throw new IllegalArgumentException("Geçersiz arama tipi!");
+                    };
+                })
+                .collect(Collectors.toList());
+    }
 }

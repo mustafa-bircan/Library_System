@@ -3,7 +3,9 @@ package main.view;
 import main.controller.LibraryController;
 import main.model.book.Book;
 import main.model.book.enums.BookStatus;
+import main.model.person.Faculty;
 import main.model.person.Reader;
+import main.model.person.Student;
 import main.model.person.enums.ReaderLimit;
 
 import java.util.List;
@@ -49,6 +51,18 @@ public class LibraryView {
         System.out.println("18. En Aktif Okuyucular");
         System.out.println("19. Gecikmiş Kitaplar");
         System.out.println("20. Kitap İstatistikleri");
+
+
+        System.out.println("\n=== ÖĞRENCİ VE AKADEMİSYEN İŞLEMLERİ ===");
+        System.out.println("21. Yeni Öğrenci Kaydı");
+        System.out.println("22. Yeni Akademisyen Kaydı");
+        System.out.println("23. Tüm Öğrencileri Listele");
+        System.out.println("24. Tüm Akademisyenleri Listele");
+        System.out.println("25. Öğrenci Bilgilerini Güncelle");
+        System.out.println("26. Akademisyen Bilgilerini Güncelle");
+        System.out.println("27. Öğrenci Sil");
+        System.out.println("28. Akademisyen Sil");
+        System.out.println("29. Bölüme Göre Öğrencileri Listele");
 
         System.out.println("\n0. ÇIKIŞ");
         System.out.print("\nSeçim İçin Tuşlama Yapın: ");
@@ -578,15 +592,13 @@ public class LibraryView {
 
         handleShowAllReaders();
 
-        System.out.print("\nCeza hesaplanacak okuyucunun ID'sini girin (örn: 001): ");
+        System.out.print("\nCeza hesaplanacak okuyucunun ID'sini girin: ");
         String readerId = scanner.nextLine();
 
         try {
-            if (!readerId.startsWith("OKUYUCU")) {
-                int idNumber = Integer.parseInt(readerId);
-                readerId = "OKUYUCU - " + String.format("%03d", idNumber);
+            if (!readerId.startsWith("K")) {
+                readerId = "K" + String.format("%03d", Integer.parseInt(readerId));
             }
-
             controller.calculateAndCollectFine(readerId);
         } catch (NumberFormatException e) {
             System.out.println("Hata: Geçersiz ID formatı! Lütfen sadece sayı girin (örn: 001)");
@@ -680,5 +692,246 @@ public class LibraryView {
                 System.out.println(key + ": " + value)
         );
         System.out.println("------------------------");
+    }
+
+    public void handleNewStudentRegistration() {
+        System.out.println("\n=== Yeni Öğrenci Kaydı ===");
+
+        System.out.println("Öğrenci adı girin: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Bölüm adı girin: ");
+        String department = scanner.nextLine();
+
+        System.out.println("Sınıf girin (1-4): ");
+        int year;
+        try {
+            year = Integer.parseInt(scanner.nextLine());
+            if (year < 1 || year > 4) {
+                System.out.println("Sınıf 1-4 arasında olmalıdır!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz sınıf numarası!");
+            return;
+        }
+
+        try {
+            controller.addNewStudent(name, department, year);
+            System.out.println("\nÖğrenci başarıyla kaydedildi!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleNewFacultyRegistration() {
+        System.out.println("\n=== Yeni Akademisyen Kaydı ===");
+
+        System.out.println("Akademisyen adı girin: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Bölüm adı girin: ");
+        String department = scanner.nextLine();
+
+        System.out.println("Unvan girin (Dr., Doç. Dr., Prof. Dr.): ");
+        String title = scanner.nextLine();
+
+        try {
+            controller.addNewFaculty(name, department, title);
+            System.out.println("\nAkademisyen başarıyla kaydedildi!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void showAllStudents() {
+        System.out.println("\n=== Tüm Öğrenciler ===");
+        List<Student> students = controller.getAllStudents();
+
+        if (students.isEmpty()) {
+            System.out.println("Kayıtlı öğrenci bulunmamaktadır.");
+            return;
+        }
+
+        students.forEach(student -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + student.getReaderId());
+            System.out.println("Ad: " + student.getName());
+            System.out.println("Öğrenci No: " + student.getStudentId());
+            System.out.println("Bölüm: " + student.getDepartment());
+            System.out.println("Sınıf: " + student.getYear());
+            System.out.println("Mevcut Kitap Sayısı: " + student.getBorrowedBooks().size());
+        });
+    }
+
+    public void showAllFaculty() {
+        System.out.println("\n=== Tüm Akademisyenler ===");
+        List<Faculty> facultyList = controller.getAllFaculty();
+
+        if (facultyList.isEmpty()) {
+            System.out.println("Kayıtlı akademisyen bulunmamaktadır.");
+            return;
+        }
+
+        facultyList.forEach(faculty -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + faculty.getReaderId());
+            System.out.println("Unvan: " + faculty.getTitle());
+            System.out.println("Ad: " + faculty.getName());
+            System.out.println("Akademisyen ID: " + faculty.getFacultyId());
+            System.out.println("Bölüm: " + faculty.getDepartment());
+            System.out.println("Mevcut Kitap Sayısı: " + faculty.getBorrowedBooks().size());
+        });
+    }
+
+    public void handleUpdateStudent() {
+        System.out.println("\n=== Öğrenci Bilgilerini Güncelle ===");
+
+        showAllStudents();
+
+        System.out.print("\nGüncellenecek öğrencinin ID'sini girin: ");
+        String studentId = scanner.nextLine();
+
+        try {
+            Student student = (Student) controller.getAllReaders().get(studentId);
+            if (student == null || !(student instanceof Student)) {
+                System.out.println("Geçersiz öğrenci ID!");
+                return;
+            }
+
+            System.out.println("\nMevcut Bilgiler:");
+            System.out.println("Ad: " + student.getName());
+            System.out.println("Bölüm: " + student.getDepartment());
+            System.out.println("Sınıf: " + student.getYear());
+
+            System.out.print("\nYeni adı girin (değiştirmemek için boş bırakın): ");
+            String newName = scanner.nextLine();
+            newName = newName.trim().isEmpty() ? student.getName() : newName;
+
+            System.out.print("Yeni bölümü girin (değiştirmemek için boş bırakın): ");
+            String newDepartment = scanner.nextLine();
+            newDepartment = newDepartment.trim().isEmpty() ? student.getDepartment() : newDepartment;
+
+            System.out.print("Yeni sınıfı girin (değiştirmemek için 0 girin): ");
+            int newYear = Integer.parseInt(scanner.nextLine());
+            newYear = newYear == 0 ? student.getYear() : newYear;
+
+            controller.updateStudent(studentId, newName, newDepartment, newYear);
+            System.out.println("\nÖğrenci bilgileri başarıyla güncellendi!");
+        } catch (Exception e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleUpdateFaculty() {
+        System.out.println("\n=== Akademisyen Bilgilerini Güncelle ===");
+
+        showAllFaculty();
+
+        System.out.print("\nGüncellenecek akademisyenin ID'sini girin: ");
+        String facultyId = scanner.nextLine();
+
+        try {
+            Faculty faculty = (Faculty) controller.getAllReaders().get(facultyId);
+            if (faculty == null || !(faculty instanceof Faculty)) {
+                System.out.println("Geçersiz akademisyen ID!");
+                return;
+            }
+
+            System.out.println("\nMevcut Bilgiler:");
+            System.out.println("Ad: " + faculty.getName());
+            System.out.println("Bölüm: " + faculty.getDepartment());
+            System.out.println("Unvan: " + faculty.getTitle());
+
+            System.out.print("\nYeni adı girin (değiştirmemek için boş bırakın): ");
+            String newName = scanner.nextLine();
+            newName = newName.trim().isEmpty() ? faculty.getName() : newName;
+
+            System.out.print("Yeni bölümü girin (değiştirmemek için boş bırakın): ");
+            String newDepartment = scanner.nextLine();
+            newDepartment = newDepartment.trim().isEmpty() ? faculty.getDepartment() : newDepartment;
+
+            System.out.print("Yeni unvanı girin (değiştirmemek için boş bırakın): ");
+            String newTitle = scanner.nextLine();
+            newTitle = newTitle.trim().isEmpty() ? faculty.getTitle() : newTitle;
+
+            controller.updateFaculty(facultyId, newName, newDepartment, newTitle);
+            System.out.println("\nAkademisyen bilgileri başarıyla güncellendi!");
+        } catch (Exception e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleDeleteStudent() {
+        System.out.println("\n=== Öğrenci Sil ===");
+
+        showAllStudents(); // Mevcut öğrencileri göster
+
+        System.out.print("\nSilinecek öğrencinin ID'sini girin: ");
+        String studentId = scanner.nextLine();
+
+        System.out.print("Bu öğrenciyi silmek istediğinizden emin misiniz? (E/H): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("E")) {
+            try {
+                controller.deleteStudent(studentId);
+                System.out.println("Öğrenci başarıyla silindi!");
+            } catch (Exception e) {
+                System.out.println("Hata: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Silme işlemi iptal edildi.");
+        }
+    }
+
+    public void handleDeleteFaculty() {
+        System.out.println("\n=== Akademisyen Sil ===");
+
+        showAllFaculty();
+
+        System.out.print("\nSilinecek akademisyenin ID'sini girin: ");
+        String facultyId = scanner.nextLine();
+
+        System.out.print("Bu akademisyeni silmek istediğinizden emin misiniz? (E/H): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("E")) {
+            try {
+                controller.deleteFaculty(facultyId);
+                System.out.println("Akademisyen başarıyla silindi!");
+            } catch (Exception e) {
+                System.out.println("Hata: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Silme işlemi iptal edildi.");
+        }
+    }
+
+    public void handleListStudentsByDepartment() {
+        System.out.println("\n=== Bölüme Göre Öğrencileri Listele ===");
+
+        System.out.print("Bölüm adını girin: ");
+        String department = scanner.nextLine();
+
+        try {
+            List<Student> students = controller.getStudentsByDepartment(department);
+
+            if (students.isEmpty()) {
+                System.out.println("\nBu bölümde kayıtlı öğrenci bulunmamaktadır!");
+                return;
+            }
+
+            System.out.println("\n" + department + " Bölümü Öğrencileri:");
+            students.forEach(student -> {
+                System.out.println("\n------------------------");
+                System.out.println("Öğrenci No: " + student.getStudentId());
+                System.out.println("Ad: " + student.getName());
+                System.out.println("Sınıf: " + student.getYear());
+                System.out.println("Ödünç Aldığı Kitap Sayısı: " + student.getBorrowedBooks().size());
+            });
+        } catch (Exception e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
     }
 }

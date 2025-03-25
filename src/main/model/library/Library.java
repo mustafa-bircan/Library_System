@@ -4,6 +4,7 @@ import main.model.book.Book;
 import main.model.book.builder.BookBuilder;
 import main.model.book.enums.BookStatus;
 import main.model.person.Reader;
+import main.model.person.enums.ReaderLimit;
 
 import java.util.*;
 
@@ -116,6 +117,23 @@ public class Library {
 
         readers.put(readerId, reader);
         System.out.println("Yeni okuyucu eklendi: " + reader.getName() + " (ID: " + readerId + ")");
+    }
+
+    public void deleteReader(String readerId) {
+        Reader reader = getReader(readerId);
+        if (!reader.getBorrowedBooks().isEmpty()) {
+            throw new IllegalStateException("Ödünç alınmış kitapları olan okuyucu silinemez!");
+        }
+        readers.remove(readerId);
+    }
+
+    public void updateReader(String readerId, String newName, String newAddress,
+                             String newPhoneNo, ReaderLimit newReaderLimit) {
+        getReader(readerId);
+
+        Reader updatedReader = new Reader(newName, newReaderLimit);
+
+        readers.put(readerId, updatedReader);
     }
 
     public Set<Book> getAvailableBooks() {

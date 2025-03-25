@@ -3,6 +3,9 @@ package main.view;
 import main.controller.LibraryController;
 import main.model.book.Book;
 import main.model.book.enums.BookStatus;
+import main.model.person.Reader;
+import main.model.person.enums.ReaderLimit;
+
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -360,6 +363,170 @@ public class LibraryView {
         try {
             controller.addNewStudyBook(title, author, price, edition, subject, isbn, grade, publisher);
             System.out.println("\nDers kitabı başarıyla eklendi");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleNewReader() {
+        System.out.println("\n=== Yeni Okuyucu Ekle ===");
+
+        System.out.println("Okuyucu adı girin: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Adres girin: ");
+        String address = scanner.nextLine();
+
+        System.out.println("Telefon numarası girin (XXX-XXXX formatında): ");
+        String phoneNo = scanner.nextLine();
+
+        System.out.println("\nOkuyucu tipini seçin:");
+        System.out.println("1. STANDART (3 kitap limiti)");
+        System.out.println("2. PREMIUM (5 kitap limiti)");
+        System.out.println("3. VIP (10 kitap limiti)");
+        System.out.print("Seçiminiz (1-3): ");
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            ReaderLimit readerLimit = switch (choice) {
+                case 1 -> ReaderLimit.STANDART;
+                case 2 -> ReaderLimit.RESTRICTED;
+                case 3 -> ReaderLimit.VIP;
+                default -> throw new IllegalArgumentException("Geçersiz okuyucu tipi seçimi!");
+            };
+
+            controller.addNewReader(name, address, phoneNo, readerLimit);
+            System.out.println("Okuyucu başarıyla eklendi!");
+        } catch (NumberFormatException e) {
+            System.out.println("Hata: Geçersiz seçim!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleShowAllReaders() {
+        System.out.println("\n=== Tüm Okuyucular ===");
+        Map<String, Reader> readers = controller.getAllReaders();
+
+        if (readers.isEmpty()) {
+            System.out.println("Kayıtlı okuyucu bulunmamaktadır.");
+            return;
+        }
+
+        readers.forEach((id, reader) -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + id);
+            System.out.println("Ad: " + reader.getName());
+            System.out.println("Üyelik Tipi: " + reader.getReaderLimit());
+            System.out.println("Mevcut Kitap Sayısı: " + reader.getBorrowedBooks().size());
+            System.out.println("Kalan Kitap Hakkı: " + reader.getRemainingBookLimit());
+        });
+        System.out.println("------------------------");
+    }
+
+    public void handleDeleteReader() {
+        System.out.println("\n=== Okuyucu Sil ===");
+        Map<String, Reader> readers = controller.getAllReaders();
+
+        if (readers.isEmpty()) {
+            System.out.println("Silinecek okuyucu bulunmamaktadır.");
+            return;
+        }
+
+        handleShowAllReaders();
+
+        System.out.print("\nSilmek istediğiniz okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        System.out.print("Bu okuyucuyu silmek istediğinizden emin misiniz? (E/H): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("E")) {
+            try {
+                controller.deleteReader(readerId);
+                System.out.println("Okuyucu başarıyla silindi!");
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                System.out.println("Hata: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Okuyucu silme işlemi iptal edildi.");
+        }
+    }
+
+    public void handleUpdateReader() {
+        System.out.println("\n=== Okuyucu Bilgilerini Güncelle ===");
+        Map<String, Reader> readers = controller.getAllReaders();
+
+        if (readers.isEmpty()) {
+            System.out.println("Güncellenecek okuyucu bulunmamaktadır.");
+            return;
+        }
+
+        handleShowAllReaders();
+
+        System.out.print("\nGüncellemek istediğiniz okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            Reader existingReader = controller.getAllReaders().get(readerId);
+            if (existingReader == null) {
+                System.out.println("Hata: Belirtilen ID'ye sahip okuyucu bulunamadı!");
+                return;
+            }
+
+            System.out.println("\nMevcut bilgiler:");
+            System.out.println("Ad: " + existingReader.getName());
+
+            System.out.print("\nYeni adı girin (değiştirmemek için boş bırakın): ");
+            String newName = scanner.nextLine();
+            newName = newName.trim().isEmpty() ? existingReader.getName() : newName;
+
+            System.out.print("Yeni adres girin: ");
+            String newAddress = scanner.nextLine();
+
+            System.out.print("Yeni telefon numarası girin (XXX-XXXX): ");
+            String newPhoneNo = scanner.nextLine();
+
+            System.out.println("\nYeni okuyucu tipini seçin:");
+            System.out.println("1. STANDART (3 kitap)");
+            System.out.println("2. PREMIUM (5 kitap)");
+            System.out.println("3. VIP (10 kitap)");
+            System.out.print("Seçiminiz (1-3): ");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+            ReaderLimit newReaderLimit = switch (choice) {
+                case 1 -> ReaderLimit.STANDART;
+                case 2 -> ReaderLimit.RESTRICTED;
+                case 3 -> ReaderLimit.VIP;
+                default -> throw new IllegalArgumentException("Geçersiz okuyucu tipi!");
+            };
+
+            controller.updateReader(readerId, newName, newAddress, newPhoneNo, newReaderLimit);
+            System.out.println("\nOkuyucu bilgileri başarıyla güncellendi!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Hata: Geçersiz seçim!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleShowReaderHistory() {
+        System.out.println("\n=== Okuyucu Geçmişi ===");
+        Map<String, Reader> readers = controller.getAllReaders();
+
+        if (readers.isEmpty()) {
+            System.out.println("Kayıtlı okuyucu bulunmamaktadır.");
+            return;
+        }
+
+        handleShowAllReaders();
+
+        System.out.print("\nGeçmişini görüntülemek istediğiniz okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            controller.showReaderHistory(readerId);
         } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Hata: " + e.getMessage());
         }

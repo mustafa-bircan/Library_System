@@ -8,6 +8,10 @@ import main.model.book.builder.JournalBuilder;
 import main.model.book.builder.StudyBookBuilder;
 import main.model.book.enums.BookStatus;
 import main.model.library.Library;
+import main.model.person.Reader;
+import main.model.person.enums.ReaderLimit;
+import main.model.record.MemberBuilder;
+import main.model.record.MemberRecord;
 
 import java.util.Map;
 import java.util.Set;
@@ -125,5 +129,51 @@ public class LibraryController {
                 .build();
 
         library.newBook(newStudyBook);
+    }
+
+    public void addNewReader(String name, String address, String phoneNo, ReaderLimit readerLimit) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu adı boş olamaz!");
+        }
+
+        String memberId = "OKUYUCU-" + String.format("%03d", library.getReaders().size() + 1);
+
+        Reader newReader = new Reader(name, readerLimit);
+
+        library.addReader(newReader);
+    }
+
+    public void deleteReader(String readerId) {
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        Reader reader = library.getReader(readerId);
+        if (!reader.getBorrowedBooks().isEmpty()) {
+            throw new IllegalStateException("Okuyucunun iade etmediği kitaplar var!");
+        }
+        library.deleteReader(readerId);
+    }
+
+    public void updateReader(String readerId, String newName, String newAddress,
+                             String newPhoneNo, ReaderLimit newReaderLimit) {
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        library.updateReader(readerId, newName, newAddress, newPhoneNo, newReaderLimit);
+    }
+
+    public Map<String, Reader> getAllReaders() {
+        return library.getReaders();
+    }
+
+    public void showReaderHistory(String readerId) {
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        Reader reader = library.getReader(readerId);
+        reader.showBook();
     }
 }

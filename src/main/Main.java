@@ -35,6 +35,21 @@ public class Main {
                 case 3 -> view.handleNewBook();
                 case 4 -> view.handleDeleteBook();
                 case 5 -> view.handleUpdateBook();
+                case 6 -> view.handleUpdateBookStatus();
+                case 7 -> view.handleNewJournal();
+                case 8 -> view.handleNewStudyBook();
+                case 9 -> view.handleNewReader();
+                case 10 -> view.handleDeleteReader();
+                case 11 -> view.handleUpdateReader();
+                case 12 -> view.handleShowAllReaders();
+                case 13 -> view.handleShowReaderHistory();
+                case 14 -> view.handleLendBook();
+                case 15 -> view.handleReturnBook();
+                case 16 -> view.handleCalculateFine();
+                case 17 -> view.handleMostReadBooks();
+                case 18 -> view.handleMostActiveReaders();
+                case 19 -> view.handleOverdueBooks();
+                case 20 -> view.handleBookStatistics();
                 default -> System.out.println("Geçersiz seçim! Lütfen tekrar deneyin.");
             }
         }

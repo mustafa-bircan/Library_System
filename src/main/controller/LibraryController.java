@@ -13,8 +13,11 @@ import main.model.person.enums.ReaderLimit;
 import main.model.record.MemberBuilder;
 import main.model.record.MemberRecord;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LibraryController {
     private final Library library;
@@ -34,7 +37,7 @@ public class LibraryController {
             throw new IllegalArgumentException("Fiyat negatif olamaz!");
         }
 
-        Book newBook = new BookBuilder(title,author)
+        Book newBook = new BookBuilder(title, author)
                 .price(price)
                 .edition(edition)
                 .build();
@@ -85,18 +88,18 @@ public class LibraryController {
         book.updateStatus(newStatus);
     }
 
-    public void addNewJournal(String title, String author, double price, String edition,String subject, String issn, int volume, int issue) {
+    public void addNewJournal(String title, String author, double price, String edition, String subject, String issn, int volume, int issue) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Dergi adı boş olamaz!");
         }
-        if (author == null || author.trim().isEmpty()){
+        if (author == null || author.trim().isEmpty()) {
             throw new IllegalArgumentException("Yazar adı boş olamaz!");
         }
         if (price < 0) {
             throw new IllegalArgumentException("Fiyat negatif olamaz!");
         }
 
-        Book newJournal = new JournalBuilder(title,author)
+        Book newJournal = new JournalBuilder(title, author)
                 .price(price)
                 .edition(edition)
                 .journalSubject(subject)
@@ -212,5 +215,42 @@ public class LibraryController {
         }
     }
 
-    
+    public List<Book> getMostReadBooks(int limit) {
+        Map<String, Book> allBooks = library.getBooks();
+        return allBooks.values().stream()
+                .sorted((b1, b2) -> Integer.compare(b2.getBorrowCount(), b1.getBorrowCount()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<Reader> getMostActiveReaders(int limit) {
+        Map<String, Reader> allReaders = library.getReaders();
+        return allReaders.values().stream()
+                .sorted((r1, r2) -> Integer.compare(r2.getBorrowedBooks().size(), r1.getBorrowedBooks().size()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> getOverdueBooks() {
+        Map<String, Book> allBooks = library.getBooks();
+        return allBooks.values().stream()
+                .filter(book -> book.getStatus() == BookStatus.BORROWED)
+                .filter(Book::isOverdue)
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Integer> getBookStatistics() {
+        Map<String, Book> allBooks = library.getBooks();
+        Map<String, Integer> stats = new HashMap<>();
+
+        stats.put("Toplam Kitap", allBooks.size());
+        stats.put("Müsait Kitap", (int) allBooks.values().stream()
+                .filter(book -> book.getStatus() == BookStatus.AVAILABLE).count());
+        stats.put("Ödünç Verilmiş", (int) allBooks.values().stream()
+                .filter(book -> book.getStatus() == BookStatus.BORROWED).count());
+        stats.put("Bakımda", (int) allBooks.values().stream()
+                .filter(book -> book.getStatus() == BookStatus.MAINTENANCE).count());
+
+        return stats;
+    }
 }

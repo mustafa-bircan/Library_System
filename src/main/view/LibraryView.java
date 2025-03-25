@@ -6,6 +6,7 @@ import main.model.book.enums.BookStatus;
 import main.model.person.Reader;
 import main.model.person.enums.ReaderLimit;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -532,30 +533,6 @@ public class LibraryView {
         }
     }
 
-    public void handleLendBook() {
-        System.out.println("\n=== Ödünç Kitap Ver ===");
-
-        showAvailableBooks();
-
-        if (controller.getAvailableBooks().isEmpty()) {
-            return;
-        }
-
-        System.out.print("\nÖdünç verilecek kitabın ID'sini girin: ");
-        String bookId = scanner.nextLine();
-
-        handleShowAllReaders();
-
-        System.out.print("\nKitabı alacak okuyucunun ID'sini girin: ");
-        String readerId = scanner.nextLine();
-
-        try {
-            controller.lendBook(bookId, readerId);
-            System.out.println("Kitap başarıyla ödünç verildi!");
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("Hata: " + e.getMessage());
-        }
-    }
 
     public void handleReturnBook() {
         System.out.println("\n=== Kitap İadesi Al ===");
@@ -609,5 +586,94 @@ public class LibraryView {
         } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Hata: " + e.getMessage());
         }
+    }
+
+    public void handleLendBook() {
+        System.out.println("\n=== Ödünç Kitap Ver ===");
+
+        showAvailableBooks();
+
+        if (controller.getAvailableBooks().isEmpty()) {
+            return;
+        }
+
+        System.out.print("\nÖdünç verilecek kitabın ID'sini girin: ");
+        String bookId = scanner.nextLine();
+
+        handleShowAllReaders();
+
+        System.out.print("\nKitabı alacak okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            controller.lendBook(bookId, readerId);
+            System.out.println("Kitap başarıyla ödünç verildi!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleMostReadBooks() {
+        System.out.println("\n=== En Çok Okunan Kitaplar ===");
+        List<Book> mostReadBooks = controller.getMostReadBooks(5);
+
+        if (mostReadBooks.isEmpty()) {
+            System.out.println("Henüz hiç kitap ödünç alınmamış.");
+            return;
+        }
+
+        mostReadBooks.forEach(book -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + book.getBookID());
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Okunma Sayısı: " + book.getBorrowCount());
+        });
+    }
+
+    public void handleMostActiveReaders() {
+        System.out.println("\n=== En Aktif Okuyucular ===");
+        List<Reader> activeReaders = controller.getMostActiveReaders(5);
+
+        if (activeReaders.isEmpty()) {
+            System.out.println("Henüz aktif okuyucu bulunmamaktadır.");
+            return;
+        }
+
+        activeReaders.forEach(reader -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + reader.getReaderId());
+            System.out.println("Ad: " + reader.getName());
+            System.out.println("Ödünç Alınan Kitap Sayısı: " + reader.getBorrowedBooks().size());
+        });
+    }
+
+    public void handleOverdueBooks() {
+        System.out.println("\n=== Gecikmiş Kitaplar ===");
+        List<Book> overdueBooks = controller.getOverdueBooks();
+
+        if (overdueBooks.isEmpty()) {
+            System.out.println("Gecikmiş kitap bulunmamaktadır.");
+            return;
+        }
+
+        overdueBooks.forEach(book -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + book.getBookID());
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Durum: " + book.getStatus().getDisplayName());
+        });
+    }
+
+    public void handleBookStatistics() {
+        System.out.println("\n=== Kitap İstatistikleri ===");
+        Map<String, Integer> stats = controller.getBookStatistics();
+
+        System.out.println("\n------------------------");
+        stats.forEach((key, value) ->
+                System.out.println(key + ": " + value)
+        );
+        System.out.println("------------------------");
     }
 }

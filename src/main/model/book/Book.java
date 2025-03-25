@@ -16,6 +16,8 @@ public class Book implements IReadable, IBorrowable {
     private BookStatus status;
     private String edition;
     private LocalDate dateOfPurchase;
+    private int borrowCount;
+    private LocalDate dueDate;
 
      public Book(BookBuilder builder) {
         this.bookID = UUID.randomUUID().toString();
@@ -26,6 +28,8 @@ public class Book implements IReadable, IBorrowable {
         this.dateOfPurchase = builder.getDateOfPurchase() != null ?
                 builder.getDateOfPurchase() : LocalDate.now();
         this.status = BookStatus.AVAILABLE;
+         this.borrowCount = 0;
+         this.dueDate = null;
     }
 
     public String getTitle() {
@@ -39,12 +43,24 @@ public class Book implements IReadable, IBorrowable {
     public String getOwner() {
         return status.getDisplayName();
     }
+    public int getBorrowCount() {
+        return borrowCount;
+    }
 
+    public boolean isOverdue() {
+        return status == BookStatus.BORROWED &&
+                dueDate != null &&
+                LocalDate.now().isAfter(dueDate);
+    }
+
+    @Override
     public void changeOwner(String newOwner) {
         if (newOwner == null || newOwner.trim().isEmpty()) {
-                throw new IllegalArgumentException("Yeni kitap sahibi boş veya null olamaz");
+            throw new IllegalArgumentException("Yeni kitap sahibi boş veya null olamaz");
         }
         this.status = BookStatus.BORROWED;
+        this.borrowCount++;
+        this.dueDate = LocalDate.now().plusDays(14);
     }
 
     public void updateStatus(BookStatus newStatus) {

@@ -2,7 +2,7 @@ package main.view;
 
 import main.controller.LibraryController;
 import main.model.book.Book;
-
+import main.model.book.enums.BookStatus;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -211,6 +211,51 @@ public class LibraryView {
 
         } catch (NumberFormatException e) {
             System.out.println("Hata: Geçersiz fiyat formatı!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleUpdateBookStatus() {
+        System.out.println("\n=== Kitap Durumunu Güncelle ===");
+        Map<String, Book> books = controller.getAllBooks();
+
+        if (books.isEmpty()) {
+            System.out.println("Kütüphanede kitap bulunmamaktadır.");
+            return;
+        }
+
+        System.out.println("\nMevcut kitaplar:");
+        books.forEach((id, book) -> {
+            System.out.println("------------------------");
+            System.out.println("ID: " + id);
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Mevcut Durum: " + book.getStatus().getDisplayName());
+        });
+
+        System.out.print("\nDurumu güncellenecek kitabın ID'sini girin: ");
+        String bookId = scanner.nextLine();
+
+        System.out.println("\nYeni durumu seçin:");
+        System.out.println("1. MÜSAİT");
+        System.out.println("2. BAKIMDA");
+        System.out.println("3. KAYIP");
+        System.out.print("Seçiminiz (1-3): ");
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            BookStatus newStatus = switch (choice) {
+                case 1 -> BookStatus.AVAILABLE;
+                case 2 -> BookStatus.MAINTENANCE;
+                case 3 -> BookStatus.LOST;
+                default -> throw new IllegalArgumentException("Geçersiz durum seçimi!");
+            };
+
+            controller.updateBookStatus(bookId, newStatus);
+            System.out.println("Kitap durumu başarıyla güncellendi!");
+        } catch (NumberFormatException e) {
+            System.out.println("Hata: Geçersiz seçim!");
         } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Hata: " + e.getMessage());
         }

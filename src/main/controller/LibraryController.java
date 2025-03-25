@@ -1,5 +1,6 @@
 package main.controller;
 
+
 import main.model.book.Book;
 import main.model.book.builder.BookBuilder;
 import main.model.book.enums.BookStatus;
@@ -59,5 +60,21 @@ public class LibraryController {
             throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
         }
         library.updateBook(bookId, newTitle, newAuthor, newPrice, newEdition);
+    }
+
+    public void updateBookStatus(String bookId, BookStatus newStatus) {
+        if (bookId == null || bookId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
+        }
+        if (newStatus == null) {
+            throw new IllegalArgumentException("Yeni durum boş olamaz!");
+        }
+
+        Book book = library.getBook(bookId);
+        if (book.getStatus() == BookStatus.BORROWED) {
+            throw new IllegalStateException("Ödünç verilmiş kitabın durumu değiştirilemez!");
+        }
+
+        book.updateStatus(newStatus);
     }
 }

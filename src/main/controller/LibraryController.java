@@ -5,6 +5,7 @@ import main.model.book.Book;
 import main.model.book.Journals;
 import main.model.book.builder.BookBuilder;
 import main.model.book.builder.JournalBuilder;
+import main.model.book.builder.StudyBookBuilder;
 import main.model.book.enums.BookStatus;
 import main.model.library.Library;
 
@@ -101,5 +102,28 @@ public class LibraryController {
                 .build();
 
         library.newBook(newJournal);
+    }
+
+    public void addNewStudyBook(String title, String author, double price, String edition,
+                                String subject, String isbn, int grade, String publisher) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap adı boş olamaz!");
+        }
+        if (author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Yazar adı boş olamaz!");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Fiyat negatif olamaz!");
+        }
+        Book newStudyBook = new StudyBookBuilder(title, author)
+                .price(price)
+                .edition(edition)
+                .subject(subject)
+                .isbn(isbn)
+                .grade(grade)
+                .publisher(publisher)
+                .build();
+
+        library.newBook(newStudyBook);
     }
 }

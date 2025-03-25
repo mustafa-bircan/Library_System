@@ -313,4 +313,55 @@ public class LibraryView {
             System.out.println("Hata: " + e.getMessage());
         }
     }
+
+    public void handleNewStudyBook() {
+        System.out.println("\n=== Yeni Ders Kitabı Ekle ===");
+
+        System.out.println("Kitap adı girin: ");
+        String title = scanner.nextLine();
+
+        System.out.println("Yazar adı girin: ");
+        String author = scanner.nextLine();
+
+        System.out.println("Fiyat girin: ");
+        double price = 0.0;
+        try {
+            price = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz fiyat formatı (Örn: 25.50)");
+            return;
+        }
+
+        System.out.println("Baskı bilgisi girin: ");
+        String edition = scanner.nextLine();
+
+        System.out.println("Ders/Konu adı girin: ");
+        String subject = scanner.nextLine();
+
+        System.out.println("ISBN numarası girin (XXX-XXXXXXXXXX formatında): ");
+        String isbn = scanner.nextLine();
+
+        System.out.println("Sınıf seviyesi girin (1-12): ");
+        int grade;
+        try {
+            grade = Integer.parseInt(scanner.nextLine());
+            if (grade < 1 || grade > 12) {
+                System.out.println("Sınıf seviyesi 1-12 arasında olmalıdır!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz sınıf seviyesi!");
+            return;
+        }
+
+        System.out.println("Yayınevi adı girin: ");
+        String publisher = scanner.nextLine();
+
+        try {
+            controller.addNewStudyBook(title, author, price, edition, subject, isbn, grade, publisher);
+            System.out.println("\nDers kitabı başarıyla eklendi");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
 }

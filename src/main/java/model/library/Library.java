@@ -51,6 +51,14 @@ public class Library {
         books.put(bookId, book);
     }
 
+    public void deleteBook(String bookId) {
+        Book book = getBook(bookId); // Önce kitabın var olup olmadığını kontrol ediyoruz
+        if (book.getStatus() == BookStatus.BORROWED) {
+            throw new IllegalStateException("Ödünç verilmiş kitap silinemez: " + book.getTitle());
+        }
+        books.remove(bookId);
+    }
+
     public void lendBook(String bookId, String readerId) {
         Book book = getBook(bookId);
         Reader reader = getReader(readerId);

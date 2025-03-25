@@ -2,6 +2,7 @@ package main.controller;
 
 import main.java.model.book.Book;
 import main.java.model.book.builder.BookBuilder;
+import main.java.model.book.enums.BookStatus;
 import main.java.model.library.Library;
 
 import java.util.Map;
@@ -39,5 +40,17 @@ public class LibraryController {
 
     public Set<Book> getAvailableBooks() {
         return library.getAvailableBooks();
+    }
+
+    public void deleteBook(String bookId) {
+        if (bookId == null || bookId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
+        }
+
+        Book book = library.getBook(bookId);
+        if (book.getStatus() == BookStatus.BORROWED) {
+            throw new IllegalStateException("Ödünç verilmiş kitap silinemez");
+        }
+        library.deleteBook(bookId);
     }
 }

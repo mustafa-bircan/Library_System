@@ -121,4 +121,40 @@ public class LibraryView {
         }
 
     }
+
+    public void handleDeleteBook() {
+        System.out.println("\n=== Kitap Sil ===");
+        Map<String, Book> books = controller.getAllBooks();
+
+        if (books.isEmpty()) {
+            System.out.println("Kütüphanede silinecek kitap bulunmamaktadır.");
+            return;
+        }
+
+        System.out.println("\nMevcut kitaplar:");
+        books.forEach((id, book) -> {
+            System.out.println("------------------------");
+            System.out.println("ID: " + id);
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Durum: " + book.getStatus().getDisplayName());
+        });
+
+        System.out.print("\nSilmek istediğiniz kitabın ID'sini girin: ");
+        String bookId = scanner.nextLine();
+
+        System.out.print("Bu kitabı silmek istediğinizden emin misiniz? (E/H): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("E")) {
+            try {
+                controller.deleteBook(bookId);
+                System.out.println("Kitap başarıyla silindi!");
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                System.out.println("Hata: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Kitap silme işlemi iptal edildi.");
+        }
+    }
 }

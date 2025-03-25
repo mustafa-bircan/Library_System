@@ -2,16 +2,17 @@ package main.controller;
 
 
 import main.model.book.Book;
-import main.model.book.Journals;
 import main.model.book.builder.BookBuilder;
 import main.model.book.builder.JournalBuilder;
 import main.model.book.builder.StudyBookBuilder;
 import main.model.book.enums.BookStatus;
 import main.model.library.Library;
+import main.model.person.Faculty;
 import main.model.person.Reader;
+import main.model.person.Student;
+import main.model.person.builder.FacultyBuilder;
+import main.model.person.builder.StudentBuilder;
 import main.model.person.enums.ReaderLimit;
-import main.model.record.MemberBuilder;
-import main.model.record.MemberRecord;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -139,9 +140,6 @@ public class LibraryController {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Okuyucu adı boş olamaz!");
         }
-
-        String memberId = "OKUYUCU-" + String.format("%03d", library.getReaders().size() + 1);
-
         Reader newReader = new Reader(name, readerLimit);
 
         library.addReader(newReader);
@@ -210,7 +208,7 @@ public class LibraryController {
 
         Reader reader = library.getReader(readerId);
         double totalFine = 0.0;
-        final double DAILY_FINE = 5.0; // 5 TL günlük ceza
+        final double DAILY_FINE = 5.0;
 
         for (Book book : reader.getBorrowedBooks()) {
             if (book.isOverdue()) {
@@ -218,12 +216,12 @@ public class LibraryController {
                 if (overdueDays > 0) {
                     double bookFine = overdueDays * DAILY_FINE;
                     totalFine += bookFine;
-                    System.out.println(String.format("""
-                    Kitap: %s
-                    Gecikme: %d gün
-                    Ceza: ₺%.2f
-                    """,
-                            book.getTitle(), overdueDays, bookFine));
+                    System.out.printf("""
+                                    Kitap: %s
+                                    Gecikme: %d gün
+                                    Ceza: ₺%.2f
+                                    %n""",
+                            book.getTitle(), overdueDays, bookFine);
                 }
             }
         }
@@ -272,5 +270,159 @@ public class LibraryController {
                 .filter(book -> book.getStatus() == BookStatus.MAINTENANCE).count());
 
         return stats;
+    }
+
+    public void addNewStudent(String name, String department, int year) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Öğrenci adı boş olamaz!");
+        }
+        if (department == null || department.trim().isEmpty()) {
+            throw new IllegalArgumentException("Bölüm adı boş olamaz!");
+        }
+        if (year < 1 || year > 4) {
+            throw new IllegalArgumentException("Sınıf 1-4 arasında olmalıdır!");
+        }
+
+        String studentId = generateStudentNumber();
+
+        Student student = new StudentBuilder()
+                .setName(name)
+                .setStudentId(studentId)
+                .setDepartment(department)
+                .setYear(year)
+                .build();
+
+        library.addReader(student);
+        System.out.println("Öğrenci başarıyla kaydedildi. Öğrenci Numarası: " + studentId);
+    }
+
+    public void addNewFaculty(String name, String department, String title) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Akademisyen adı boş olamaz!");
+        }
+        if (department == null || department.trim().isEmpty()) {
+            throw new IllegalArgumentException("Bölüm adı boş olamaz!");
+        }
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Unvan boş olamaz!");
+        }
+
+        String facultyId = generateFacultyId();
+
+        Faculty faculty = new FacultyBuilder()
+                .setName(name)
+                .setFacultyId(facultyId)
+                .setDepartment(department)
+                .setTitle(title)
+                .build();
+
+        library.addReader(faculty);
+        System.out.println("Akademisyen başarıyla kaydedildi. Akademisyen ID: " + facultyId);
+    }
+
+    public List<Student> getAllStudents() {
+        return library.getReaders().values().stream()
+                .filter(reader -> reader instanceof Student)
+                .map(reader -> (Student) reader)
+                .collect(Collectors.toList());
+    }
+
+    public List<Faculty> getAllFaculty() {
+        return library.getReaders().values().stream()
+                .filter(reader -> reader instanceof Faculty)
+                .map(reader -> (Faculty) reader)
+                .collect(Collectors.toList());
+    }
+
+    public void updateStudent(String studentId, String newName, String newDepartment, int newYear) {
+        if (studentId == null || studentId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Öğrenci ID boş olamaz!");
+        }
+
+        Reader reader = library.getReader(studentId);
+        if (reader == null) {
+            throw new IllegalArgumentException("Bu ID'ye sahip bir okuyucu bulunamadı!");
+        }
+
+        if (!(reader instanceof Student student)) {
+            throw new IllegalArgumentException("Bu ID bir öğrenciye ait değil!");
+        }
+
+        String currentStudentId = student.getStudentId();
+
+        student.setName(newName);
+        student.setDepartment(newDepartment);
+        student.setYear(newYear);
+
+        student.setStudentId(currentStudentId);
+    }
+
+    public void updateFaculty(String facultyId, String newName, String newDepartment, String newTitle) {
+        if (facultyId == null || facultyId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Akademisyen ID boş olamaz!");
+        }
+
+        Reader reader = library.getReader(facultyId);
+        if (reader == null) {
+            throw new IllegalArgumentException("Bu ID'ye sahip bir okuyucu bulunamadı!");
+        }
+
+        if (!(reader instanceof Faculty faculty)) {
+            throw new IllegalArgumentException("Bu ID bir akademisyene ait değil!");
+        }
+
+        String currentFacultyId = faculty.getFacultyId();
+
+        faculty.setName(newName);
+        faculty.setDepartment(newDepartment);
+        faculty.setTitle(newTitle);
+
+        faculty.setFacultyId(currentFacultyId);
+    }
+
+    public void deleteStudent(String studentId) {
+        if (studentId == null || studentId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Öğrenci ID boş olamaz!");
+        }
+
+        Reader reader = library.getReader(studentId);
+        if (!(reader instanceof Student)) {
+            throw new IllegalArgumentException("Bu ID bir öğrenciye ait değil!");
+        }
+
+        library.deleteReader(studentId);
+    }
+
+    public void deleteFaculty(String facultyId) {
+        if (facultyId == null || facultyId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Akademisyen ID boş olamaz!");
+        }
+
+        Reader reader = library.getReader(facultyId);
+        if (!(reader instanceof Faculty)) {
+            throw new IllegalArgumentException("Bu ID bir akademisyene ait değil!");
+        }
+
+        library.deleteReader(facultyId);
+    }
+
+    public List<Student> getStudentsByDepartment(String department) {
+        if (department == null || department.trim().isEmpty()) {
+            throw new IllegalArgumentException("Bölüm adı boş olamaz!");
+        }
+
+        return getAllStudents().stream()
+                .filter(student -> student.getDepartment().equalsIgnoreCase(department))
+                .collect(Collectors.toList());
+    }
+
+    private String generateFacultyId() {
+        int nextId = getAllFaculty().size() + 1;
+        return "AKD-" + String.format("%03d", nextId);
+    }
+
+    private String generateStudentNumber() {
+        int nextId = getAllStudents().size() + 1;
+        return "STD-" + String.format("%03d", nextId);
     }
 }

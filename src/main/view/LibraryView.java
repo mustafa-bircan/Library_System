@@ -578,13 +578,18 @@ public class LibraryView {
 
         handleShowAllReaders();
 
-        System.out.print("\nCeza hesaplanacak okuyucunun ID'sini girin: ");
+        System.out.print("\nCeza hesaplanacak okuyucunun ID'sini girin (örn: 001): ");
         String readerId = scanner.nextLine();
 
         try {
+            if (!readerId.startsWith("OKUYUCU")) {
+                int idNumber = Integer.parseInt(readerId);
+                readerId = "OKUYUCU - " + String.format("%03d", idNumber);
+            }
+
             controller.calculateAndCollectFine(readerId);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("Hata: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Hata: Geçersiz ID formatı! Lütfen sadece sayı girin (örn: 001)");
         }
     }
 

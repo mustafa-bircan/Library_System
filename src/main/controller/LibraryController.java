@@ -13,6 +13,7 @@ import main.model.person.enums.ReaderLimit;
 import main.model.record.MemberBuilder;
 import main.model.record.MemberRecord;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,10 +209,29 @@ public class LibraryController {
         }
 
         Reader reader = library.getReader(readerId);
-        double fine = 0.0;
+        double totalFine = 0.0;
+        final double DAILY_FINE = 5.0; // 5 TL günlük ceza
 
-        if (fine > 0) {
-            reader.payFine(fine);
+        for (Book book : reader.getBorrowedBooks()) {
+            if (book.isOverdue()) {
+                long overdueDays = book.getDueDate().until(LocalDate.now()).getDays();
+                if (overdueDays > 0) {
+                    double bookFine = overdueDays * DAILY_FINE;
+                    totalFine += bookFine;
+                    System.out.println(String.format("""
+                    Kitap: %s
+                    Gecikme: %d gün
+                    Ceza: ₺%.2f
+                    """,
+                            book.getTitle(), overdueDays, bookFine));
+                }
+            }
+        }
+
+        if (totalFine > 0) {
+            reader.payFine(totalFine);
+        } else {
+            System.out.println("Ödenmesi gereken ceza bulunmamaktadır.");
         }
     }
 

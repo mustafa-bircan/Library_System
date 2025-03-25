@@ -32,6 +32,14 @@ public class Book implements IReadable, IBorrowable {
          this.dueDate = null;
     }
 
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public String getTitle() {
         return name;
     }
@@ -68,6 +76,9 @@ public class Book implements IReadable, IBorrowable {
             throw new IllegalArgumentException("Durum null olamaz");
         }
         this.status = newStatus;
+        if (newStatus == BookStatus.AVAILABLE) {
+            this.dueDate = null;
+        }
     }
 
     public void display() {

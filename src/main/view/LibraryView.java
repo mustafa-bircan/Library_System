@@ -260,4 +260,57 @@ public class LibraryView {
             System.out.println("Hata: " + e.getMessage());
         }
     }
+
+    public void handleNewJournal() {
+        System.out.println("\n=== Yeni Dergi Ekle ===");
+
+        System.out.println("Dergi adı girin: ");
+        String title = scanner.nextLine();
+
+        System.out.println("Yazar/Editör adı girin: ");
+        String author = scanner.nextLine();
+
+        System.out.println("Fiyat girin: ");
+        double price = 0.0;
+        try {
+            price = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz fiyat formatı (Örn: 25.50)");
+            return;
+        }
+
+        System.out.println("Baskı bilgisi girin: ");
+        String edition = scanner.nextLine();
+
+        System.out.println("Dergi konusu girin: ");
+        String subject = scanner.nextLine();
+
+        System.out.println("ISSN numarası girin (XXXX-XXXX formatında): ");
+        String issn = scanner.nextLine();
+
+        System.out.println("Cilt numarası girin: ");
+        int volume;
+        try {
+            volume = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz cilt numarası!");
+            return;
+        }
+
+        System.out.println("Sayı numarası girin: ");
+        int issue;
+        try {
+            issue = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Geçersiz sayı numarası!");
+            return;
+        }
+
+        try {
+            controller.addNewJournal(title, author, price, edition, subject, issn, volume, issue);
+            System.out.println("\nDergi başarıyla eklendi");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
 }

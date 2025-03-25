@@ -2,7 +2,9 @@ package main.controller;
 
 
 import main.model.book.Book;
+import main.model.book.Journals;
 import main.model.book.builder.BookBuilder;
+import main.model.book.builder.JournalBuilder;
 import main.model.book.enums.BookStatus;
 import main.model.library.Library;
 
@@ -76,5 +78,28 @@ public class LibraryController {
         }
 
         book.updateStatus(newStatus);
+    }
+
+    public void addNewJournal(String title, String author, double price, String edition,String subject, String issn, int volume, int issue) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Dergi adı boş olamaz!");
+        }
+        if (author == null || author.trim().isEmpty()){
+            throw new IllegalArgumentException("Yazar adı boş olamaz!");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Fiyat negatif olamaz!");
+        }
+
+        Book newJournal = new JournalBuilder(title,author)
+                .price(price)
+                .edition(edition)
+                .journalSubject(subject)
+                .issn(issn)
+                .volume(volume)
+                .issue(issue)
+                .build();
+
+        library.newBook(newJournal);
     }
 }

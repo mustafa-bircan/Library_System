@@ -176,4 +176,41 @@ public class LibraryController {
         Reader reader = library.getReader(readerId);
         reader.showBook();
     }
+
+    public void lendBook(String bookId, String readerId) {
+        if (bookId == null || bookId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
+        }
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        library.lendBook(bookId, readerId);
+    }
+
+    public void returnBook(String bookId, String readerId) {
+        if (bookId == null || bookId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
+        }
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        library.takeBackBook(bookId, readerId);
+    }
+
+    public void calculateAndCollectFine(String readerId) {
+        if (readerId == null || readerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Okuyucu ID'si boş olamaz!");
+        }
+
+        Reader reader = library.getReader(readerId);
+        double fine = 0.0;
+
+        if (fine > 0) {
+            reader.payFine(fine);
+        }
+    }
+
+    
 }

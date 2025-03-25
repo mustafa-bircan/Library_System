@@ -4,6 +4,7 @@ import main.model.book.Book;
 import main.model.book.enums.BookStatus;
 import main.model.person.enums.ReaderLimit;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Reader extends Person{
@@ -72,6 +73,23 @@ public class Reader extends Person{
 
         System.out.println("Ödünç alınan kitaplar " + getName() + ":");
         books.forEach(Book::display);
+    }
+
+    public void payFine(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Ceza tutarı 0'dan büyük olmalıdır!");
+        }
+        System.out.println(String.format("""
+        =====================
+        CEZA ÖDEME MAKBUZU
+        =====================
+        Okuyucu: %s
+        Okuyucu ID: %s
+        Ödenen Tutar: ₺%.2f
+        Tarih: %s
+        =====================
+        """,
+                getName(), getReaderId(), amount, LocalDate.now()));
     }
 
     @Override

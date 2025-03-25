@@ -531,4 +531,83 @@ public class LibraryView {
             System.out.println("Hata: " + e.getMessage());
         }
     }
+
+    public void handleLendBook() {
+        System.out.println("\n=== Ödünç Kitap Ver ===");
+
+        showAvailableBooks();
+
+        if (controller.getAvailableBooks().isEmpty()) {
+            return;
+        }
+
+        System.out.print("\nÖdünç verilecek kitabın ID'sini girin: ");
+        String bookId = scanner.nextLine();
+
+        handleShowAllReaders();
+
+        System.out.print("\nKitabı alacak okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            controller.lendBook(bookId, readerId);
+            System.out.println("Kitap başarıyla ödünç verildi!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleReturnBook() {
+        System.out.println("\n=== Kitap İadesi Al ===");
+
+        handleShowAllReaders();
+
+        System.out.print("\nİade yapacak okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            Reader reader = controller.getAllReaders().get(readerId);
+            if (reader == null) {
+                System.out.println("Hata: Okuyucu bulunamadı!");
+                return;
+            }
+
+            Set<Book> borrowedBooks = reader.getBorrowedBooks();
+            if (borrowedBooks.isEmpty()) {
+                System.out.println("Bu okuyucunun iade edecek kitabı yok!");
+                return;
+            }
+
+            System.out.println("\nOkuyucunun ödünç aldığı kitaplar:");
+            borrowedBooks.forEach(book -> {
+                System.out.println("------------------------");
+                System.out.println("ID: " + book.getBookID());
+                System.out.println("Başlık: " + book.getTitle());
+                System.out.println("Yazar: " + book.getAuthor());
+            });
+
+            System.out.print("\nİade edilecek kitabın ID'sini girin: ");
+            String bookId = scanner.nextLine();
+
+            controller.returnBook(bookId, readerId);
+            System.out.println("Kitap başarıyla iade alındı!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
+
+    public void handleCalculateFine() {
+        System.out.println("\n=== Ceza Hesapla ve Tahsil Et ===");
+
+        handleShowAllReaders();
+
+        System.out.print("\nCeza hesaplanacak okuyucunun ID'sini girin: ");
+        String readerId = scanner.nextLine();
+
+        try {
+            controller.calculateAndCollectFine(readerId);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
 }

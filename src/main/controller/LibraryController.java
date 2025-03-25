@@ -5,6 +5,7 @@ import main.java.model.book.builder.BookBuilder;
 import main.java.model.library.Library;
 
 import java.util.Map;
+import java.util.Set;
 
 public class LibraryController {
     private final Library library;
@@ -34,5 +35,9 @@ public class LibraryController {
 
     public Map<String, Book> getAllBooks() {
         return library.getBooks();
+    }
+
+    public Set<Book> getAvailableBooks() {
+        return library.getAvailableBooks();
     }
 }

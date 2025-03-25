@@ -5,6 +5,7 @@ import main.java.model.book.Book;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class LibraryView {
     private final LibraryController controller;
@@ -72,6 +73,22 @@ public class LibraryView {
             System.out.println("Başlık: " + book.getTitle());
             System.out.println("Yazar: " + book.getAuthor());
             System.out.println("Durum: " + book.getStatus().getDisplayName());
+        });
+        System.out.println("------------------------");
+    }
+
+    public void showAvailableBooks() {
+        System.out.println("\n=== Mevcut Kitaplar ===");
+        Set<Book> availableBooks = controller.getAvailableBooks();
+
+        if (availableBooks.isEmpty()) {
+            System.out.println("Ödünç verilebilecek kitap yok.");
+        }
+        availableBooks.forEach(book -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + book.getBookID());
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
         });
         System.out.println("------------------------");
     }

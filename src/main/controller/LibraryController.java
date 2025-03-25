@@ -4,6 +4,8 @@ import main.java.model.book.Book;
 import main.java.model.book.builder.BookBuilder;
 import main.java.model.library.Library;
 
+import java.util.Map;
+
 public class LibraryController {
     private final Library library;
 
@@ -28,5 +30,9 @@ public class LibraryController {
                 .build();
 
         library.newBook(newBook);
+    }
+
+    public Map<String, Book> getAllBooks() {
+        return library.getBooks();
     }
 }

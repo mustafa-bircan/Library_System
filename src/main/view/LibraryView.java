@@ -1,7 +1,9 @@
 package main.view;
 
 import main.controller.LibraryController;
+import main.java.model.book.Book;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class LibraryView {
@@ -53,5 +55,24 @@ public class LibraryView {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    public void showAllBooks() {
+        System.out.println("\n=== Kütüphanede Bulunan Tüm Kitaplar ===");
+        Map<String, Book> books = controller.getAllBooks();
+
+        if (books.isEmpty()) {
+            System.out.println("Kütüphanede kitap bulunmamaktadır.");
+            return;
+        }
+
+        books.forEach((id, book) -> {
+            System.out.println("\n------------------------");
+            System.out.println("ID: " + id);
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Durum: " + book.getStatus().getDisplayName());
+        });
+        System.out.println("------------------------");
     }
 }

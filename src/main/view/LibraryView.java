@@ -157,4 +157,62 @@ public class LibraryView {
             System.out.println("Kitap silme işlemi iptal edildi.");
         }
     }
+
+    public void handleUpdateBook() {
+        System.out.println("\n=== Kitap Bilgilerini Güncelle ===");
+        Map<String, Book> books = controller.getAllBooks();
+
+        if (books.isEmpty()) {
+            System.out.println("Kütüphanede güncellenecek kitap bulunmamaktadır.");
+            return;
+        }
+
+        System.out.println("\nMevcut kitaplar:");
+        books.forEach((id, book) -> {
+            System.out.println("------------------------");
+            System.out.println("ID: " + id);
+            System.out.println("Başlık: " + book.getTitle());
+            System.out.println("Yazar: " + book.getAuthor());
+            System.out.println("Durum: " + book.getStatus().getDisplayName());
+        });
+
+        System.out.print("\nGüncellemek istediğiniz kitabın ID'sini girin: ");
+        String bookId = scanner.nextLine();
+
+        try {
+            Book existingBook = controller.getAllBooks().get(bookId);
+            if (existingBook == null) {
+                System.out.println("Hata: Belirtilen ID'ye sahip kitap bulunamadı!");
+                return;
+            }
+
+            System.out.println("\nMevcut bilgiler:");
+            System.out.println("Başlık: " + existingBook.getTitle());
+            System.out.println("Yazar: " + existingBook.getAuthor());
+
+            System.out.print("\nYeni başlığı girin (değiştirmemek için boş bırakın): ");
+            String newTitle = scanner.nextLine();
+            newTitle = newTitle.trim().isEmpty() ? existingBook.getTitle() : newTitle;
+
+            System.out.print("Yeni yazarı girin (değiştirmemek için boş bırakın): ");
+            String newAuthor = scanner.nextLine();
+            newAuthor = newAuthor.trim().isEmpty() ? existingBook.getAuthor() : newAuthor;
+
+            System.out.print("Yeni fiyatı girin (değiştirmemek için -1 girin): ");
+            double newPrice = Double.parseDouble(scanner.nextLine());
+            newPrice = newPrice < 0 ? existingBook.getPrice() : newPrice;
+
+            System.out.print("Yeni baskı bilgisini girin (değiştirmemek için boş bırakın): ");
+            String newEdition = scanner.nextLine();
+            newEdition = newEdition.trim().isEmpty() ? existingBook.getEdition() : newEdition;
+
+            controller.updateBook(bookId, newTitle, newAuthor, newPrice, newEdition);
+            System.out.println("\nKitap bilgileri başarıyla güncellendi!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Hata: Geçersiz fiyat formatı!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Hata: " + e.getMessage());
+        }
+    }
 }

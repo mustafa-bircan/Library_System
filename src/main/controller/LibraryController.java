@@ -53,4 +53,11 @@ public class LibraryController {
         }
         library.deleteBook(bookId);
     }
+
+    public void updateBook(String bookId, String newTitle, String newAuthor, double newPrice, String newEdition) {
+        if (bookId == null || bookId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kitap ID'si boş olamaz!");
+        }
+        library.updateBook(bookId, newTitle, newAuthor, newPrice, newEdition);
+    }
 }

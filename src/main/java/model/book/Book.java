@@ -70,6 +70,9 @@ public class Book implements IReadable, IBorrowable {
         return status;
     }
 
+    public String getEdition() {
+        return edition;
+    }
     public String getDisplayInfo() {
         return new StringBuilder()
                 .append("Kitap ID: ").append(bookID).append("\n")

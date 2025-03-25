@@ -1,6 +1,7 @@
 package main.java.model.library;
 
 import main.java.model.book.Book;
+import main.java.model.book.builder.BookBuilder;
 import main.java.model.book.enums.BookStatus;
 import main.java.model.person.Reader;
 
@@ -52,11 +53,22 @@ public class Library {
     }
 
     public void deleteBook(String bookId) {
-        Book book = getBook(bookId); // Önce kitabın var olup olmadığını kontrol ediyoruz
+        Book book = getBook(bookId);
         if (book.getStatus() == BookStatus.BORROWED) {
             throw new IllegalStateException("Ödünç verilmiş kitap silinemez: " + book.getTitle());
         }
         books.remove(bookId);
+    }
+
+    public void updateBook(String bookId, String newTitle, String newAuthor, double newPrice, String newEdition) {
+        Book book = getBook(bookId);
+
+        BookBuilder builder = new BookBuilder(newTitle, newAuthor)
+                .price(newPrice)
+                .edition(newEdition);
+
+        Book updatedBook = builder.build();
+        books.put(bookId, updatedBook);
     }
 
     public void lendBook(String bookId, String readerId) {

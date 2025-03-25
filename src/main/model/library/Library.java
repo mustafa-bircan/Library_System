@@ -62,7 +62,6 @@ public class Library {
     }
 
     public void updateBook(String bookId, String newTitle, String newAuthor, double newPrice, String newEdition) {
-        Book book = getBook(bookId);
 
         BookBuilder builder = new BookBuilder(newTitle, newAuthor)
                 .price(newPrice)

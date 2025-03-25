@@ -17,7 +17,7 @@ public class Reader extends Person{
         super(name);
         this.readerLimit = readerLimit;
         this.books = new HashSet<>();
-        this.readerId = "OKUYUCU - " + String.format("%03d", nextId++);
+        this.readerId = "K" + String.format("%03d", nextId++);
     }
 
     public void borrowBook(Book book) {

@@ -50,6 +50,15 @@ public class Main {
                 case 18 -> view.handleMostActiveReaders();
                 case 19 -> view.handleOverdueBooks();
                 case 20 -> view.handleBookStatistics();
+                case 21 -> view.handleNewStudentRegistration();
+                case 22 -> view.handleNewFacultyRegistration();
+                case 23 -> view.showAllStudents();
+                case 24 -> view.showAllFaculty();
+                case 25 -> view.handleUpdateStudent();
+                case 26 -> view.handleUpdateFaculty();
+                case 27 -> view.handleDeleteStudent();
+                case 28 -> view.handleDeleteFaculty();
+                case 29 -> view.handleListStudentsByDepartment();
                 default -> System.out.println("Geçersiz seçim! Lütfen tekrar deneyin.");
             }
         }
